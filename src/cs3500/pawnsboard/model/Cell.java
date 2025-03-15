@@ -52,4 +52,6 @@ public interface Cell {
    * @return whether the cell is a game card
    */
   boolean isGameCard();
+
+  Cell getCell();
 }

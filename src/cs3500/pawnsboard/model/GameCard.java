@@ -92,6 +92,11 @@ public class GameCard implements Cell {
     return true;
   }
 
+  @Override
+  public Cell getCell() {
+    return this;
+  }
+
   /**
    * Sets the color of the card to the given player's color.
    *

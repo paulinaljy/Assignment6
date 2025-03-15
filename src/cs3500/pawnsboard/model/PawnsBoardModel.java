@@ -371,4 +371,29 @@ public class PawnsBoardModel implements QueensBlood {
     Player currentPlayer = this.getCurrentPlayer();
     return currentPlayer.getHand();
   }
+
+  @Override
+  public List<ArrayList<Cell>> getBoard() {
+    List<ArrayList<Cell>> boardCopy = new ArrayList<>();
+    for (ArrayList<Cell> row : board) {
+      ArrayList<Cell> rowCopy = new ArrayList<>();
+      for (Cell cell : row) {
+        rowCopy.add(cell.getCell());  // Assuming Cell has a copy constructor
+      }
+      boardCopy.add(rowCopy);
+    }
+    return boardCopy;
+  }
+
+  @Override
+  public Player getOwnerOfCell(int row, int col) {
+    Cell cell = getCellAt(row, col);
+    if (cell.getColor().equals(Color.red)) {
+      return players[0];
+    } else if (cell.getColor().equals(Color.blue)) {
+      return players[1];
+    } else {
+      return null;
+    }
+  }
 }
