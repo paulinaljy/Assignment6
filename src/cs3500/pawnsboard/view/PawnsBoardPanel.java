@@ -28,27 +28,25 @@ public class PawnsBoardPanel extends JPanel {
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D)g.create();
 
-    g2d.setColor(Color.BLACK);
     int height = model.getHeight();
     int width = model.getWidth();
 
     g2d.transform(getTransformForLogicalToPhysical());
 
+    drawBoard(g2d);
+
+    g2d.setColor(Color.BLACK);
     // draws vertical lines
-    for (int col = 0; col < width; col++) {
-      drawLine(g2d, 0, col, width + 1, col);
+    for (int col = 1; col < width + 3; col++) {
+      drawLine(g2d, 0, col, width, col);
     }
-    drawLine(g2d, 1, 0, 1, 3);
-    drawLine(g2d, 2, 0, 2, 3);
-    drawLine(g2d, 0, 1, 3, 1);
-    drawLine(g2d, 0, 2, 3, 2);
 
     // draws horizontal lines
-    for (int row = 1; row < height; row++) {
-      drawLine(g2d, row, 0, row, height + 1);
+    for (int row = 0; row < height + 1; row++) {
+      drawLine(g2d, row, 1, row, width + 1);
     }
 
-    drawBoard(g2d);
+    drawScore(g2d);
   }
 
   private void drawLine(Graphics2D g2d, int row, int col, int endRow, int endCol) {
@@ -63,30 +61,91 @@ public class PawnsBoardPanel extends JPanel {
   }
 
   private Dimension getLogicalDimensions() {
-    return new Dimension(model.getWidth(), model.getHeight());
+    return new Dimension(200, 200);
   }
 
   private AffineTransform getTransformForModelToLogical() {
     AffineTransform transform = new AffineTransform();
-    transform.scale(getLogicalDimensions().getWidth() / 10,
-            getLogicalDimensions().getHeight() / 10);
+    transform.scale(getLogicalDimensions().getWidth() / (model.getWidth() + 2),
+            getLogicalDimensions().getHeight() / model.getHeight());
     return transform;
+    // scale ratio = logical dimension / model dimension
   }
 
   private AffineTransform getTransformForLogicalToPhysical() {
     AffineTransform transform = new AffineTransform();
     transform.scale(this.getWidth() / getLogicalDimensions().getWidth(),
-            this.getHeight() / getLogicalDimensions().getHeight());
+            this.getHeight() / getLogicalDimensions().getWidth());
     return transform;
+    // scale ratio = physical dimension / logical dimension
   }
 
   private void drawBoard(Graphics2D g2d) {
-    for(int row = 0; row < model.getHeight(); row++) {
-      for(int col = 0; col < model.getWidth(); col++) {
-
+    for (int row = 0; row < model.getHeight(); row++) {
+      for (int col = 0; col < model.getWidth(); col++) {
         Cell cell = model.getCellAt(row, col);
+
+        // empty or pawns cell = fill gray, game card = fill color
+        drawRect(g2d, row, col + 1,1, 1, cell.getCellColor());
+
+        // pawns cell
+        Color ownedColor = cell.getOwnedColor();
+        if (ownedColor.equals(Color.red) || ownedColor.equals(Color.blue)) {
+          drawCircle(g2d, row, col + 1, 1, 1, cell.getOwnedColor());
+        }
+
+        // game card
+        if (cell.isGameCard()) {
+          int value = cell.getValue();
+          drawValue(g2d, row, col + 1, value);
+        }
       }
     }
+  }
+
+  private void drawScore(Graphics2D g2d) {
+    for (int row = 0; row < model.getHeight(); row++) {
+      for (int col = 0; col < model.getWidth() + 2; col++) {
+        if (col == 0) {
+          drawValue(g2d, row, col, model.getP1RowScore(row));
+        }
+        if (col == model.getWidth() + 1) {
+          drawValue(g2d, row, col, model.getP2RowScore(row));
+        }
+      }
+    }
+  }
+
+  private void drawRect(Graphics2D g2d, int row, int col, int width, int height, Color color) {
+    AffineTransform modelToLogical = getTransformForModelToLogical();
+    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+    Point2D dst = modelToLogical.transform(new Point(width, height), null);
+
+    g2d.setColor(color);
+    g2d.fillRect((int)src.getX(),
+            (int)src.getY(),
+            (int)dst.getX(),
+            (int)dst.getY());
+  }
+
+  private void drawCircle(Graphics2D g2d, int row, int col, int width, int height, Color color) {
+    AffineTransform modelToLogical = getTransformForModelToLogical();
+    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+    Point2D dst = modelToLogical.transform(new Point(width, height), null);
+
+    g2d.setColor(color);
+    g2d.fillOval((int)src.getX(),
+            (int)src.getY(),
+            (int)dst.getX(),
+            (int)dst.getY());
+  }
+
+  private void drawValue(Graphics2D g2d, int row, int col, int value) {
+    AffineTransform modelToLogical = getTransformForModelToLogical();
+    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+
+    g2d.setColor(Color.black);
+    g2d.drawString(Integer.toString(value), (int)src.getX(), (int)src.getY());
   }
 
   public void subscribe(ViewActions observer) {

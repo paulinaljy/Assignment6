@@ -31,8 +31,13 @@ public class Pawns implements Cell {
   }
 
   @Override
-  public Color getColor() {
+  public Color getOwnedColor() {
     return this.color;
+  }
+
+  @Override
+  public Color getCellColor() {
+    return Color.gray;
   }
 
   /**
@@ -43,7 +48,7 @@ public class Pawns implements Cell {
    */
   @Override
   public Cell influence(Player currentPlayer) {
-    if (currentPlayer.getColor().equals(this.getColor()) && this.count < 3) {
+    if (currentPlayer.getColor().equals(this.getOwnedColor()) && this.count < 3) {
       this.count += 1; // adds 1 to Pawns count
     } else { // if cell is other player => update color to current player color
       this.color = currentPlayer.getColor();

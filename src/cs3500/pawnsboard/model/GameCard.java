@@ -68,7 +68,12 @@ public class GameCard implements Cell {
   }
 
   @Override
-  public Color getColor() {
+  public Color getOwnedColor() {
+    return this.color;
+  }
+
+  @Override
+  public Color getCellColor() {
     return this.color;
   }
 

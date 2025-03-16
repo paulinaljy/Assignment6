@@ -8,14 +8,16 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
-  private PawnsBoardPanel panel;
+  private PawnsBoardPanel boardPanel;
+  private PlayersHandPanel playersHandPanel;
 
   public PawnsBoardFrame(ReadonlyPawnsBoardModel model) {
     super();
-    setSize(900, 900);
+    setSize((model.getWidth() + 2) * 100, model.getHeight() * 100); // physical display dimensions
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    panel = new PawnsBoardPanel(model);
-    this.add(panel);
+    boardPanel = new PawnsBoardPanel(model);
+    this.add(boardPanel);
+    //this.add(playersHandPanel);
   }
 
   @Override
@@ -30,7 +32,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
   @Override
   public void subscribe(ViewActions observer) {
-    this.panel.subscribe(observer);
+    this.boardPanel.subscribe(observer);
     this.addKeyListener(new KeyListener() {
       @Override
       public void keyTyped(KeyEvent e) {

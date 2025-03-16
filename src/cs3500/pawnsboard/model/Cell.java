@@ -30,7 +30,15 @@ public interface Cell {
    * the game cards.
    * @return the color of the cell
    */
-  Color getColor();
+  Color getOwnedColor();
+
+  /**
+   * Returns the color of the pawns. If the cell is an EmptyCell, return gray. If the cell is Pawns,
+   * return the color of the pawns in this class. If the cell is a GameCard, return the color of
+   * the game cards.
+   * @return the color of the cell
+   */
+  Color getCellColor();
 
   /**
    * Updates the cell based on the influence of the card and the given player.

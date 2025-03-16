@@ -151,7 +151,7 @@ public class PawnsBoardModel implements QueensBlood {
       throw new IllegalStateException("Cannot add card to this position");
     }
     // if the given card and position does not contain the same color pawn as the player
-    if (!(centerCell.getColor().equals(currentPlayer.getColor()))) {
+    if (!(centerCell.getOwnedColor().equals(currentPlayer.getColor()))) {
       throw new IllegalStateException("Does not own same colored pawns");
     }
     // if the player does not have enough pawns to cover the cost of the card
@@ -348,7 +348,7 @@ public class PawnsBoardModel implements QueensBlood {
     int score = 0;
     for (int col = 0; col < this.board.get(row).size(); col++) {
       Cell cell = getCellAt(row, col);
-      if (cell.isGameCard() && cell.getColor() == playerColor) {
+      if (cell.isGameCard() && cell.getOwnedColor() == playerColor) {
         score += cell.getValue(); // gets the value of the card if Player owns color and is GameCard
       }
     }
@@ -388,9 +388,9 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public Player getOwnerOfCell(int row, int col) {
     Cell cell = getCellAt(row, col);
-    if (cell.getColor().equals(Color.red)) {
+    if (cell.getOwnedColor().equals(Color.red)) {
       return players[0];
-    } else if (cell.getColor().equals(Color.blue)) {
+    } else if (cell.getOwnedColor().equals(Color.blue)) {
       return players[1];
     } else {
       return null;

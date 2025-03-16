@@ -20,7 +20,12 @@ public class EmptyCell implements Cell {
   }
 
   @Override
-  public Color getColor() {
+  public Color getOwnedColor() {
+    return Color.gray;
+  }
+
+  @Override
+  public Color getCellColor() {
     return Color.gray;
   }
 

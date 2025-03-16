@@ -251,7 +251,7 @@ public class PawnsBoardTest {
     assertTrue(game1.getCellAt(2, 0).isGameCard());
 
     // check game card cell color changed
-    assertEquals(Color.red, game1.getCellAt(2, 0).getColor());
+    assertEquals(Color.red, game1.getCellAt(2, 0).getOwnedColor());
 
     // check influenced cells changed
     assertTrue(game1.getCellAt(2, 1).isCardPlaceable()); // (2,1)
@@ -317,13 +317,13 @@ public class PawnsBoardTest {
 
     game1.placeCardInPosition(3, 1, 4); // player 2 placed crab in (1,4)
     assertTrue(game1.getCellAt(1, 3).isCardPlaceable()); // (1,3) blue pawns
-    assertEquals(Color.blue, game1.getCellAt(1, 3).getColor()); // owned by player 2
+    assertEquals(Color.blue, game1.getCellAt(1, 3).getOwnedColor()); // owned by player 2
 
     game1.drawNextCard();
     game1.placeCardInPosition(4, 1, 2); // player 1 placed security in (1,2)
     // influenced cell that changed ownership
     // player 2 (blue) => player 1 (red)
-    assertEquals(Color.red, game1.getCellAt(1, 3).getColor());
+    assertEquals(Color.red, game1.getCellAt(1, 3).getOwnedColor());
     assertEquals(1, game1.getCellAt(1, 3).getValue());
   }
 
@@ -760,7 +760,7 @@ public class PawnsBoardTest {
 
   @Test
   public void testEmptyCellGetColor() {
-    assertEquals(Color.gray, emptyCell.getColor());
+    assertEquals(Color.gray, emptyCell.getOwnedColor());
   }
 
   @Test
@@ -791,11 +791,11 @@ public class PawnsBoardTest {
   @Test
   public void testGameCardGetColor() {
     game1.startGame(p1Deck, p2Deck, 5, true);
-    assertEquals(Color.white, game1.getHand().get(1).getColor());
+    assertEquals(Color.white, game1.getHand().get(1).getOwnedColor());
 
     game1.placeCardInPosition(1, 0, 0);
 
-    assertEquals(Color.red, game1.getHand().get(1).getColor());
+    assertEquals(Color.red, game1.getHand().get(1).getOwnedColor());
   }
 
   @Test
@@ -835,7 +835,7 @@ public class PawnsBoardTest {
 
   @Test
   public void testPawnsGetColor() {
-    assertEquals(Color.red, redPawns.getColor());
+    assertEquals(Color.red, redPawns.getOwnedColor());
   }
 
   @Test
