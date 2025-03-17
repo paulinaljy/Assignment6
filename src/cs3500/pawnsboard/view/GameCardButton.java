@@ -23,7 +23,6 @@ public class GameCardButton extends JButton {
     this.pawnsBoardModel = pawnsBoardModel;
     this.card = card;
 
-    // Remove button-like behavior
     setFocusPainted(false);
     setBorderPainted(false);
     setContentAreaFilled(false);
@@ -31,12 +30,10 @@ public class GameCardButton extends JButton {
     setBackground(pawnsBoardModel.getCurrentPlayer().getColor());
     setPreferredSize(new Dimension(120, 200));
 
-    // Add the existing GameCardPanel inside the button
     cardPanel = new GameCardPanel(pawnsBoardModel, card);
     cardPanel.setOpaque(false);
-    add(cardPanel); // Add to button
+    add(cardPanel);
 
-    // Adding MouseListener to move the button up
     addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
