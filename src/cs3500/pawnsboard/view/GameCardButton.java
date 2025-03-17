@@ -35,10 +35,17 @@ public class GameCardButton extends JButton {
     add(cardPanel);
 
     addMouseListener(new MouseAdapter() {
+
+      boolean clicked = false;
       @Override
       public void mouseClicked(MouseEvent e) {
-        System.out.println("Card Clicked!");
-        setLocation(getX(), getY() - 10);
+        if (!clicked) {
+          clicked = true;
+          setLocation(getX(), getY() - 10);
+        } else {
+          clicked = false;
+          setLocation(getX(), getY() + 10);
+        }
       }
     });
   }
