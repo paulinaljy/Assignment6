@@ -12,11 +12,8 @@ import cs3500.pawnsboard.model.DeckConfiguration;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.model.PawnsBoardModel;
-import cs3500.pawnsboard.model.QueensBlood;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
-import cs3500.pawnsboard.view.PawnsBoardTextualView;
 import cs3500.pawnsboard.view.PawnsBoardView;
-import cs3500.pawnsboard.view.QueensBloodTextualView;
 
 /**
  * Represents a PawnsBoard game.

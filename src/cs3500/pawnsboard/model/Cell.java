@@ -6,7 +6,6 @@ import java.awt.Color;
  * Represents the behaviors of a cell in the board, either an empty cell, pawns, or game card.
  */
 public interface Cell {
-
   /**
    * Returns the cost of the cell. If the cell is an EmptyCell, return 4 (greater than any card
    * cost to indicate that the player cannot place a card here, as there are no pawns).
@@ -41,13 +40,6 @@ public interface Cell {
   Color getCellColor();
 
   /**
-   * Updates the cell based on the influence of the card and the given player.
-   * @param currentPlayer the current player of the game
-   * @return new cell that is updated
-   */
-  Cell influence(Player currentPlayer);
-
-  /**
    * Checks whether a game card is placeable in this cell. If this cell is empty or a game card,
    * return false. If this cell is a pawns, return true.
    * @return boolean whether a card can be placed in this cell
@@ -62,4 +54,13 @@ public interface Cell {
   boolean isGameCard();
 
   Cell getCell();
+
+  String getName();
+
+  /**
+   * Updates the cell based on the influence of the card and the given player.
+   * @param currentPlayer the current player of the game
+   * @return new cell that is updated
+   */
+  Cell influence(Player currentPlayer);
 }

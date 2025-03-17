@@ -1,4 +1,5 @@
 package cs3500.pawnsboard.view;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -7,17 +8,20 @@ import javax.swing.*;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
-
   private PawnsBoardPanel boardPanel;
   private PlayersHandPanel playersHandPanel;
 
-  public PawnsBoardFrame(ReadonlyPawnsBoardModel model) {
+  public PawnsBoardFrame(ReadonlyPawnsBoardModel pawnsBoardModel) {
     super();
-    setSize((model.getWidth() + 2) * 100, model.getHeight() * 100); // physical display dimensions
+    setSize((pawnsBoardModel.getWidth() + 2) * 100, (pawnsBoardModel.getHeight() + 2) * 100); // physical display dimensions
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    boardPanel = new PawnsBoardPanel(model);
-    this.add(boardPanel);
-    //this.add(playersHandPanel);
+    boardPanel = new PawnsBoardPanel(pawnsBoardModel);
+    playersHandPanel = new PlayersHandPanel(pawnsBoardModel);
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridLayout(2, 1));
+    panel.add(boardPanel);
+    panel.add(playersHandPanel);
+    this.add(panel);
   }
 
   @Override

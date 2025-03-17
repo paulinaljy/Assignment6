@@ -54,6 +54,11 @@ public class EmptyCell implements Cell {
     return this;
   }
 
+  @Override
+  public String getName() {
+    return null;
+  }
+
   public String toString() {
     return "_";
   }

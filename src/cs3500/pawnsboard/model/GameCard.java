@@ -9,7 +9,7 @@ import java.util.Objects;
  * cost, value, and influence grid. A GameCard also has a color that sets the player ownership
  * when placed on the game board.
  */
-public class GameCard implements Cell {
+public class GameCard implements Cell, ReadOnlyGameCard {
   /**
    * Represents a Cost, which is either 1, 2, or 3.
    */
@@ -100,6 +100,23 @@ public class GameCard implements Cell {
   @Override
   public Cell getCell() {
     return this;
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
+  }
+
+  @Override
+  public boolean isCellInfluencedAt(int row, int col) {
+    for (int i = 0; i < influenceGrid.size(); i++) {
+      int rowPosition = influenceGrid.get(i).getRowDelta() + 2;
+      int colPosition = influenceGrid.get(i).getColDelta() + 2;
+      if (rowPosition == row && colPosition == col) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

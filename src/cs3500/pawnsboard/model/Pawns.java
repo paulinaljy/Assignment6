@@ -71,6 +71,10 @@ public class Pawns implements Cell {
     return this;
   }
 
+  @Override
+  public String getName() {
+    return null;
+  }
 
   /**
    * Returns the textual view of this pawns as a String for the number of pawns on the board

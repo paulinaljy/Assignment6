@@ -91,7 +91,9 @@ public class PawnsBoardPanel extends JPanel {
         // pawns cell
         Color ownedColor = cell.getOwnedColor();
         if (ownedColor.equals(Color.red) || ownedColor.equals(Color.blue)) {
-          drawCircle(g2d, row, col + 1, 1, 1, cell.getOwnedColor());
+          for (int i = 0; i < cell.getValue(); i++) {
+            drawCircle(g2d, row, col + 1, 1, 1, cell.getOwnedColor());
+          }
         }
 
         // game card
@@ -134,18 +136,21 @@ public class PawnsBoardPanel extends JPanel {
     Point2D dst = modelToLogical.transform(new Point(width, height), null);
 
     g2d.setColor(color);
-    g2d.fillOval((int)src.getX(),
-            (int)src.getY(),
-            (int)dst.getX(),
-            (int)dst.getY());
+    g2d.fillOval((int)src.getX() + 5,
+            (int)src.getY() + 20,
+            5,
+            10);
   }
 
   private void drawValue(Graphics2D g2d, int row, int col, int value) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
-    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+    Point2D src = modelToLogical.transform(new Point(col, row), null); // starting point
+    Point2D dst = modelToLogical.transform(new Point(col + 1, row + 1), null); // starting point of next col
+    int x = ((int)src.getX() + (int)dst.getX()) / 2; // in between starting point and next col
+    int y = ((int)src.getY() + (int)dst.getY()) / 2;
 
     g2d.setColor(Color.black);
-    g2d.drawString(Integer.toString(value), (int)src.getX(), (int)src.getY());
+    g2d.drawString(Integer.toString(value), x - 4, y);
   }
 
   public void subscribe(ViewActions observer) {
@@ -173,6 +178,7 @@ public class PawnsBoardPanel extends JPanel {
         Point2D logical = physicalToLogical.transform(physical, null);
         Point2D model = logicalToModel.transform(logical, null);
         observer.placeCard((int) model.getY(), (int) model.getX());
+
       } catch (NoninvertibleTransformException ex) {
         throw new RuntimeException(ex);
       }
