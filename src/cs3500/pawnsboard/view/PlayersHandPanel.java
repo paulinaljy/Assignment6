@@ -26,7 +26,7 @@ public class PlayersHandPanel extends JPanel {
   private void drawHand() {
     ArrayList<GameCard> playersHand = new ArrayList<GameCard>(pawnsBoardModel.getHand());
     for (GameCard card : playersHand) {
-      this.add(new GameCardPanel(pawnsBoardModel, card));
+      this.add(new GameCardButton(pawnsBoardModel, card));
     }
 
     revalidate();

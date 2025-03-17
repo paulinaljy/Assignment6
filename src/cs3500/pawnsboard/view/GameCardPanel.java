@@ -1,13 +1,17 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 
-import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.ReadOnlyGameCard;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
@@ -52,17 +56,6 @@ public class GameCardPanel extends JPanel {
 
     add(cardInfo, BorderLayout.NORTH);
     add(influenceGrid, BorderLayout.CENTER);
-
-    //adding mouse listener
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        System.out.println("clicked");
-        setLocation(getX(), getY() - 10); //this not working
-        revalidate();
-        repaint();
-      }
-    });
   }
 
   private void drawGrid() {
