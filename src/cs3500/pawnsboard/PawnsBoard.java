@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import cs3500.pawnsboard.controller.PawnsBoardController;
 import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.DeckConfiguration;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
-import cs3500.pawnsboard.view.PawnsBoardView;
 
 /**
  * Represents a PawnsBoard game.
@@ -35,8 +33,9 @@ public class PawnsBoard {
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
     model.startGame(p1Deck, p2Deck, 5, false);
 
-    PawnsBoardView view = new PawnsBoardFrame(model);
-    PawnsBoardController controller = new PawnsBoardGUIController(view);
-    controller.playGame(model);
+    PawnsBoardFrame view = new PawnsBoardFrame(model);
+    PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view);
+    view.setController(controller);
+    controller.playGame();
   }
 }

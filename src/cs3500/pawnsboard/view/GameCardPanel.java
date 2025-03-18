@@ -1,8 +1,6 @@
 package cs3500.pawnsboard.view;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.BorderLayout;

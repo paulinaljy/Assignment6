@@ -9,11 +9,9 @@ import cs3500.pawnsboard.model.PawnsBoardModel;
 public interface PawnsBoardController {
 
   /**
-   * Execute a single game of pawns board given a PawnsBoard Model. When the game is over,
-   * the playGame method ends.
-   *
-   * @param m a non-null tic tac toe Model
+   * Execute a single game of pawns board.
+   * When the game is over, the playGame method ends.
    */
-  void playGame(PawnsBoardModel m);
+  void playGame();
 
 }

@@ -9,20 +9,27 @@ import java.awt.geom.Point2D;
 
 import javax.swing.*;
 
+import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardPanel extends JPanel {
 
   private final ReadonlyPawnsBoardModel model;
+  private final PawnsBoardGUIController controller;
   private Point selectedBoardCell;
 
-  public PawnsBoardPanel(ReadonlyPawnsBoardModel model) {
+  public PawnsBoardPanel(ReadonlyPawnsBoardModel model, PawnsBoardGUIController controller) {
     super();
     if (model == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
+    if (controller == null) {
+      throw new IllegalArgumentException("Controller cannot be null");
+    }
+
     this.model = model;
+    this.controller = controller;
     this.selectedBoardCell = null;
 
     this.addMouseListener(new PawnsBoardMouseListener());

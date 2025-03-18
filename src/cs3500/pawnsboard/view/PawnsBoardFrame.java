@@ -5,23 +5,31 @@ import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
+import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
   private PawnsBoardPanel boardPanel;
   private PlayersHandPanel playersHandPanel;
+  private PawnsBoardGUIController controller;
 
   public PawnsBoardFrame(ReadonlyPawnsBoardModel pawnsBoardModel) {
     super();
     setSize((pawnsBoardModel.getWidth() + 2) * 100, (pawnsBoardModel.getHeight() + 2) * 100); // physical display dimensions
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    boardPanel = new PawnsBoardPanel(pawnsBoardModel);
-    playersHandPanel = new PlayersHandPanel(pawnsBoardModel);
+    boardPanel = new PawnsBoardPanel(pawnsBoardModel, controller);
+    playersHandPanel = new PlayersHandPanel(pawnsBoardModel, controller);
     JPanel panel = new JPanel();
     panel.setLayout(new GridLayout(2, 1));
     panel.add(boardPanel);
     panel.add(playersHandPanel);
     this.add(panel);
+
+    setFocusable(true);
+  }
+
+  public void setController(PawnsBoardGUIController controller) {
+    this.controller = controller;
   }
 
   @Override
@@ -40,14 +48,12 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
     this.addKeyListener(new KeyListener() {
       @Override
       public void keyTyped(KeyEvent e) {
-        if(e.getKeyChar() == 'q') {
-          observer.quit();
-        }
+
       }
 
       @Override
       public void keyPressed(KeyEvent e) {
-
+        controller.keyPressed(e);
       }
 
       @Override
