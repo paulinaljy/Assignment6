@@ -35,7 +35,6 @@ public class PawnsBoard {
 
     PawnsBoardFrame view = new PawnsBoardFrame(model);
     PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view);
-    view.setController(controller);
     controller.playGame();
   }
 }

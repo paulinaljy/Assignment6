@@ -6,5 +6,7 @@ public interface ViewActions {
 
   void quit();
 
+  void pass();
+
 }
 

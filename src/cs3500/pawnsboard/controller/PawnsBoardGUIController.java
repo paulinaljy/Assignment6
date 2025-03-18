@@ -41,41 +41,10 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
     System.exit(0);
   }
 
-  /**
-   * Stores the selected card from hand to use when needed.
-   *
-   * @param card card selected
-   */
-  public void cardSelect(GameCardButton card) {
-    this.gameCard = card;
+  @Override
+  public void pass() {
+    model.pass();
   }
 
-  public void keyPressed(KeyEvent e) {
-    switch (e.getKeyCode()) {
-      case KeyEvent.VK_Q: // Quit game
-        System.out.println("Game Quit");
-        quit();
-        break;
-
-      case KeyEvent.VK_ENTER: // Confirm move
-        if (gameCard != null && gameCard != null) {
-          // need to get the position model.placeCardInPosition(x, y);
-          gameCard = null;
-          view.refresh();
-        } else {
-          System.out.println("Cannot confirm: No card selected or no board cell selected.");
-        }
-        break;
-
-      case KeyEvent.VK_SPACE: // Pass move
-        System.out.println("Turn passed");
-        model.pass();
-        break;
-
-      default:
-        System.out.println("Key not valid");
-        break;
-    }
-  }
 
 }
