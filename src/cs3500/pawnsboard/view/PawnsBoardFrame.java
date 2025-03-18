@@ -36,7 +36,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
   @Override
   public void subscribe(ViewActions observer) {
-    this.boardPanel.subscribe(observer);
+    //this.boardPanel.subscribe(observer);
     this.addKeyListener(new KeyListener() {
       @Override
       public void keyTyped(KeyEvent e) {

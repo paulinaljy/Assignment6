@@ -6,7 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import javax.swing.JPanel;
+
+import javax.swing.*;
 
 import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
@@ -14,6 +15,7 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 public class PawnsBoardPanel extends JPanel {
 
   private final ReadonlyPawnsBoardModel model;
+  private Point selectedBoardCell;
 
   public PawnsBoardPanel(ReadonlyPawnsBoardModel model) {
     super();
@@ -21,6 +23,9 @@ public class PawnsBoardPanel extends JPanel {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.model = model;
+    this.selectedBoardCell = null;
+
+    this.addMouseListener(new PawnsBoardMouseListener());
   }
 
   @Override
@@ -84,9 +89,15 @@ public class PawnsBoardPanel extends JPanel {
     for (int row = 0; row < model.getHeight(); row++) {
       for (int col = 0; col < model.getWidth(); col++) {
         Cell cell = model.getCellAt(row, col);
+        Color backgroundColor = cell.getCellColor();
+
+        System.out.println(this.selectedBoardCell);
+        if (selectedBoardCell != null && row == selectedBoardCell.getY() && (col + 1) == selectedBoardCell.getX()) {
+          backgroundColor = Color.cyan;
+        }
 
         // empty or pawns cell = fill gray, game card = fill color
-        drawRect(g2d, row, col + 1,1, 1, cell.getCellColor());
+        drawRect(g2d, row, col + 1,1, 1, backgroundColor);
 
         // pawns cell
         Color ownedColor = cell.getOwnedColor();
@@ -153,31 +164,34 @@ public class PawnsBoardPanel extends JPanel {
     g2d.drawString(Integer.toString(value), x - 4, y);
   }
 
-  public void subscribe(ViewActions observer) {
-    this.addMouseListener(new PawnsBoardMouseListener(observer));
-  }
-
   class PawnsBoardMouseListener extends MouseAdapter {
 
-    private ViewActions observer;
-
-    public PawnsBoardMouseListener(ViewActions observer) {
-      this.observer = observer;
+    public PawnsBoardMouseListener() {
     }
 
     public void mouseClicked(MouseEvent evt) {
-      Point2D physical = evt.getPoint();
+      Point2D physical = evt.getPoint(); // coordinate of actual (x,y) of physical display in the panel
 
       try {
-        AffineTransform physicalToLogical = getTransformForLogicalToPhysical();
-        physicalToLogical.invert();
+        // create objects to convert
+        AffineTransform physicalToLogical = getTransformForLogicalToPhysical(); // convert from physical to logical
+        physicalToLogical.invert(); // invert physical to logical
 
-        AffineTransform logicalToModel = getTransformForModelToLogical();
-        logicalToModel.invert();
+        AffineTransform logicalToModel = getTransformForModelToLogical(); // convert from logical to model (cell row/col)
+        logicalToModel.invert(); // invert logical to model
 
+        // convert using objects to coordinates
         Point2D logical = physicalToLogical.transform(physical, null);
         Point2D model = logicalToModel.transform(logical, null);
-        observer.placeCard((int) model.getY(), (int) model.getX());
+
+        // observer takes coordinates and performs action
+        if (selectedBoardCell != null && selectedBoardCell.getX() == (int)model.getX()
+                && selectedBoardCell.getY() == (int)model.getY()) {
+          selectedBoardCell = null;
+        } else {
+          selectedBoardCell = new Point((int)model.getX(), (int)model.getY());
+        }
+        repaint();
 
       } catch (NoninvertibleTransformException ex) {
         throw new RuntimeException(ex);

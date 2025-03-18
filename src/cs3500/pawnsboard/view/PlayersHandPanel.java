@@ -23,26 +23,26 @@ public class PlayersHandPanel extends JPanel {
     this.pawnsBoardModel = pawnsBoardModel;
 
     setLayout(new FlowLayout(FlowLayout.LEFT));
-    drawHand();
+    createHand();
   }
 
-  private void drawHand() {
+  private void createHand() {
     ArrayList<GameCard> playersHand = new ArrayList<GameCard>(pawnsBoardModel.getHand());
     for (GameCard card : playersHand) {
       GameCardButton cardButton = new GameCardButton(pawnsBoardModel, card);
       cardButton.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-          if (selectedCard == cardButton) {
-            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
-            selectedCard = null;
+          if (selectedCard == cardButton) { // if selected card that is already selected
+            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // moves card down
+            selectedCard = null; // deselect card
           } else {
-            if (selectedCard != null) {
-              selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
+            if (selectedCard != null) { // if a card is already selected + select different card
+              selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // move originally selected card down
             }
 
-            selectedCard = cardButton;
-            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() - 10);
+            selectedCard = cardButton; // set selected card to current card
+            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() - 10); // move current card up
           }
         }
       });
