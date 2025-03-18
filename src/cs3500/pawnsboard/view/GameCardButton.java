@@ -33,21 +33,6 @@ public class GameCardButton extends JButton {
     cardPanel = new GameCardPanel(pawnsBoardModel, card);
     cardPanel.setOpaque(false);
     add(cardPanel);
-
-    addMouseListener(new MouseAdapter() {
-
-      boolean clicked = false;
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (!clicked) {
-          clicked = true;
-          setLocation(getX(), getY() - 10);
-        } else {
-          clicked = false;
-          setLocation(getX(), getY() + 10);
-        }
-      }
-    });
   }
 
   public int getIndexID() {
