@@ -48,7 +48,7 @@ public class PawnsBoardPanel extends JPanel {
     g2d.setColor(Color.BLACK);
     // draws vertical lines
     for (int col = 1; col < width + 3; col++) {
-      drawLine(g2d, 0, col, width, col);
+      drawLine(g2d, 0, col, height, col);
     }
 
     // draws horizontal lines
@@ -121,13 +121,13 @@ public class PawnsBoardPanel extends JPanel {
   private void drawPawns(Graphics2D g2d, int row, int col, int value, Color color) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
     Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
-    Point2D dst = modelToLogical.transform(new Point(1, 1), null);
 
     g2d.setColor(color);
-    int offSet = 5;
+    int xOffSet = 5;
+    int yOffSet = 25 - (int)((model.getHeight() - 1) * 2.5);
     for (int i = 0; i < value; i++) {
-      g2d.fillOval((int)src.getX() + offSet,(int)src.getY() + 20,5,10);
-      offSet += 6;
+      g2d.fillOval((int)src.getX() + xOffSet,(int)src.getY() + yOffSet,5,10);
+      xOffSet += 6;
     }
   }
 
@@ -185,6 +185,10 @@ public class PawnsBoardPanel extends JPanel {
 
   public void subscribe(ViewActions observer) {
 
+  }
+
+  public void reset() {
+    selectedBoardCell = null;
   }
 
   class PawnsBoardMouseListener extends MouseAdapter {

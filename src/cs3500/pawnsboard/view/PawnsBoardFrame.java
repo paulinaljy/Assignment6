@@ -55,6 +55,8 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
             Point selectedCell = boardPanel.getSelectedBoardCell();
             int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
             observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX() - 1);
+            boardPanel.reset();
+            playersHandPanel.reset();
             playersHandPanel.updateCard();
             break;
 

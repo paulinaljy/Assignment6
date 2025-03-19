@@ -1,19 +1,14 @@
 package cs3500.pawnsboard.view;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.GameCard;
-import cs3500.pawnsboard.model.ReadOnlyGameCard;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PlayersHandPanel extends JPanel {
@@ -30,6 +25,7 @@ public class PlayersHandPanel extends JPanel {
 
     this.pawnsBoardModel = pawnsBoardModel;
 
+    //setLayout(new GridLayout(1, 1));
     setLayout(new FlowLayout(FlowLayout.LEFT));
     createHand();
   }
@@ -63,6 +59,11 @@ public class PlayersHandPanel extends JPanel {
     }
 
     revalidate();
+  }
+
+  public void reset() {
+    selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
+    selectedCard = null;
   }
 
   public void updateCard() {

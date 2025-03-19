@@ -55,6 +55,8 @@ public class GameCardPanel extends JPanel {
 
   public void updateCard() {
     ReadOnlyGameCard card = pawnsBoardModel.getHand().get(cardIdx);
+    setBackground(pawnsBoardModel.getCurrentPlayer().getColor());
+    setOpaque(true);
 
     name.setText(card.getName());
     cost.setText("Cost: " + card.getCost());
@@ -79,6 +81,8 @@ public class GameCardPanel extends JPanel {
         } else {
           cell.setBackground(Color.DARK_GRAY);
         }
+
+        gridIdx++;
       }
     }
     influenceGrid.revalidate();

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import cs3500.pawnsboard.model.DeckConfiguration;
+import cs3500.pawnsboard.controller.DeckConfiguration;
 import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.Pawns;
-import cs3500.pawnsboard.model.PawnsBoardDeckConfig;
+import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;

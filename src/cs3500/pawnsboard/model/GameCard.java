@@ -49,7 +49,7 @@ public class GameCard implements Cell, ReadOnlyGameCard {
     this.color = Color.white;
   }
 
-  static Cost valueToCost(int value) {
+  public static Cost valueToCost(int value) {
     switch (value) {
       case 1:
         return Cost.ONE;

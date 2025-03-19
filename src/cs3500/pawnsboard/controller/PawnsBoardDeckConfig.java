@@ -1,9 +1,12 @@
-package cs3500.pawnsboard.model;
+package cs3500.pawnsboard.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+
+import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.Position;
 
 /**
  * Represents a PawnsBoardDeckConfig that loads the deck configuration based on the given file

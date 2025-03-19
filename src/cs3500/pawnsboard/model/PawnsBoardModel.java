@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cs3500.pawnsboard.controller.DeckConfiguration;
+
 /**
  * Represents the model of a PawnsBoard game with behaviors, including starting the game, placing a
  * card, passing, performing the influence effect of placing a card, getting a cell at a specific

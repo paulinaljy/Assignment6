@@ -1,6 +1,8 @@
-package cs3500.pawnsboard.model;
+package cs3500.pawnsboard.controller;
 
 import java.util.List;
+
+import cs3500.pawnsboard.model.GameCard;
 
 /**
  * Represents an interface with behaviors to load a deck.

@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Random;
 
 import cs3500.pawnsboard.controller.PawnsBoardGUIController;
-import cs3500.pawnsboard.model.DeckConfiguration;
+import cs3500.pawnsboard.controller.DeckConfiguration;
 import cs3500.pawnsboard.model.GameCard;
-import cs3500.pawnsboard.model.PawnsBoardDeckConfig;
+import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
 
 /**
  * Represents a PawnsBoard game.
  */
-public class PawnsBoard {
+public final class PawnsBoardGame {
   /**
    * Runs the PawnsBoardGame given the arguments.Initialize a model with a board size of 3 rows by
    * 5 columns. Reads a deck configuration file and creates a deck of card for player 1 and player
@@ -25,15 +25,18 @@ public class PawnsBoard {
    */
   public static void main(String[] args) throws IOException {
     DeckConfiguration deckConfig = new PawnsBoardDeckConfig();
-    PawnsBoardModel model = new PawnsBoardModel(5, 3, new Random(), deckConfig);
-    String path = "docs" + File.separator + "deck.config";
+    PawnsBoardModel model = new PawnsBoardModel(5, 7, new Random(), deckConfig);
+    String path = "docs" + File.separator + "gameDeck.config";
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
     model.startGame(p1Deck, p2Deck, 5, false);
 
-    PawnsBoardFrame view = new PawnsBoardFrame(model);
-    PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view);
+    PawnsBoardFrame view1 = new PawnsBoardFrame(model);
+    PawnsBoardFrame view2 = new PawnsBoardFrame(model);
+    view1.setVisible(true);
+    view2.setVisible(true);
+    PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view1, view2);
     controller.playGame();
   }
 }
