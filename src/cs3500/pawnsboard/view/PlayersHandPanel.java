@@ -3,6 +3,7 @@ package cs3500.pawnsboard.view;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -30,8 +31,9 @@ public class PlayersHandPanel extends JPanel {
 
   private void createHand() {
     ArrayList<GameCard> playersHand = new ArrayList<GameCard>(pawnsBoardModel.getHand());
-    for (GameCard card : playersHand) {
-      GameCardButton cardButton = new GameCardButton(pawnsBoardModel, card);
+    for (int i = 0; i < playersHand.size(); i++) {
+      GameCard card = playersHand.get(i);
+      GameCardButton cardButton = new GameCardButton(pawnsBoardModel, card, i);
       cardButton.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -53,5 +55,12 @@ public class PlayersHandPanel extends JPanel {
     }
 
     revalidate();
+  }
+
+  public GameCardButton getSelectedCard() {
+    return selectedCard;
+  }
+
+  public void subscribe(ViewActions observer) {
   }
 }

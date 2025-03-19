@@ -26,7 +26,6 @@ public class PawnsBoard {
   public static void main(String[] args) throws IOException {
     DeckConfiguration deckConfig = new PawnsBoardDeckConfig();
     PawnsBoardModel model = new PawnsBoardModel(5, 3, new Random(), deckConfig);
-    Appendable gameLog = new StringBuffer();
     String path = "docs" + File.separator + "deck.config";
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));

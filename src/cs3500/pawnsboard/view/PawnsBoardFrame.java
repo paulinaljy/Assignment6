@@ -39,7 +39,8 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
   @Override
   public void subscribe(ViewActions observer) {
-    //this.boardPanel.subscribe(observer);
+    this.boardPanel.subscribe(observer);
+    this.playersHandPanel.subscribe(observer);
     this.addKeyListener(new KeyListener() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -49,7 +50,9 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
             break;
 
           case KeyEvent.VK_ENTER: // confirm move
-            //observer.placeCard(coodinates);
+            Point selectedCell = boardPanel.getSelectedBoardCell();
+            int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
+            observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX());
             break;
 
           case KeyEvent.VK_SPACE: // pass move

@@ -15,13 +15,14 @@ public class GameCardButton extends JButton {
   private ReadOnlyGameCard card;
   private int cardIdx;
 
-  public GameCardButton(ReadonlyPawnsBoardModel pawnsBoardModel, ReadOnlyGameCard card) {
+  public GameCardButton(ReadonlyPawnsBoardModel pawnsBoardModel, ReadOnlyGameCard card, int cardIdx) {
     super();
     if (pawnsBoardModel == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.pawnsBoardModel = pawnsBoardModel;
     this.card = card;
+    this.cardIdx = cardIdx;
 
     setFocusPainted(false);
     setBorderPainted(false);

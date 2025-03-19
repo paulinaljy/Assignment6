@@ -1,9 +1,6 @@
 package cs3500.pawnsboard.controller;
 
-import java.awt.event.KeyEvent;
-
 import cs3500.pawnsboard.model.PawnsBoardModel;
-import cs3500.pawnsboard.view.GameCardButton;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
 
@@ -11,14 +8,13 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
 
   private PawnsBoardModel model;
   private PawnsBoardView view;
-  private GameCardButton gameCard;
 
   public PawnsBoardGUIController(PawnsBoardModel model, PawnsBoardView view) {
     if (view == null) {
-      throw new IllegalArgumentException("Bad view");
+      throw new IllegalArgumentException("View cannot be null");
     }
     if (model == null) {
-      throw new IllegalArgumentException("Bad model");
+      throw new IllegalArgumentException("Model cannot be null");
     }
     this.model = model;
     this.view = view;
@@ -31,8 +27,8 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
   }
 
   @Override
-  public void placeCard(int row, int col) {
-    //model.placeCardInPosition(row, col);
+  public void placeCard(int cardIdx, int row, int col) {
+    model.placeCardInPosition(cardIdx, row, col);
     view.refresh();
   }
 

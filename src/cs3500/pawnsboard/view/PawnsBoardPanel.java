@@ -93,7 +93,6 @@ public class PawnsBoardPanel extends JPanel {
         Cell cell = model.getCellAt(row, col);
         Color backgroundColor = cell.getCellColor();
 
-        System.out.println(this.selectedBoardCell);
         if (selectedBoardCell != null && row == selectedBoardCell.getY() && (col + 1) == selectedBoardCell.getX()) {
           backgroundColor = Color.cyan;
         }
@@ -164,6 +163,14 @@ public class PawnsBoardPanel extends JPanel {
 
     g2d.setColor(Color.black);
     g2d.drawString(Integer.toString(value), x - 4, y);
+  }
+
+  public Point getSelectedBoardCell() {
+    return selectedBoardCell;
+  }
+
+  public void subscribe(ViewActions observer) {
+
   }
 
   class PawnsBoardMouseListener extends MouseAdapter {

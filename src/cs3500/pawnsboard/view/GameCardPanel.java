@@ -20,7 +20,6 @@ public class GameCardPanel extends JPanel {
   private JLabel value;
   private JPanel influenceGrid;
   private ReadOnlyGameCard card;
-  private int cardIdx;
 
   public GameCardPanel(ReadonlyPawnsBoardModel pawnsBoardModel, ReadOnlyGameCard card) {
     super();
@@ -72,10 +71,5 @@ public class GameCardPanel extends JPanel {
       }
     }
     influenceGrid.revalidate();
-  }
-
-
-  public int getIndexID() {
-    return cardIdx;
   }
 }
