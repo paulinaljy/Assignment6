@@ -11,6 +11,9 @@ import javax.swing.*;
 
 import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.Cell;
+import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.Pawns;
+import cs3500.pawnsboard.model.ReadOnlyCell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardPanel extends JPanel {
@@ -90,7 +93,7 @@ public class PawnsBoardPanel extends JPanel {
   private void drawBoard(Graphics2D g2d) {
     for (int row = 0; row < model.getHeight(); row++) {
       for (int col = 0; col < model.getWidth(); col++) {
-        Cell cell = model.getCellAt(row, col);
+        ReadOnlyCell cell = model.getCellAt(row, col);
         Color backgroundColor = cell.getCellColor();
 
         if (selectedBoardCell != null && row == selectedBoardCell.getY() && (col + 1) == selectedBoardCell.getX()) {
@@ -102,10 +105,8 @@ public class PawnsBoardPanel extends JPanel {
 
         // pawns cell
         Color ownedColor = cell.getOwnedColor();
-        if (ownedColor.equals(Color.red) || ownedColor.equals(Color.blue)) {
-          for (int i = 0; i < cell.getValue(); i++) {
-            drawCircle(g2d, row, col + 1, 1, 1, cell.getOwnedColor());
-          }
+        if (!cell.isGameCard() && (ownedColor.equals(Color.red) || ownedColor.equals(Color.blue))) {
+          drawPawns(g2d, row, col + 1, cell.getValue(), ownedColor);
         }
 
         // game card
@@ -114,6 +115,19 @@ public class PawnsBoardPanel extends JPanel {
           drawValue(g2d, row, col + 1, value);
         }
       }
+    }
+  }
+
+  private void drawPawns(Graphics2D g2d, int row, int col, int value, Color color) {
+    AffineTransform modelToLogical = getTransformForModelToLogical();
+    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+    Point2D dst = modelToLogical.transform(new Point(1, 1), null);
+
+    g2d.setColor(color);
+    int offSet = 5;
+    for (int i = 0; i < value; i++) {
+      g2d.fillOval((int)src.getX() + offSet,(int)src.getY() + 20,5,10);
+      offSet += 6;
     }
   }
 

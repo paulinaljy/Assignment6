@@ -46,7 +46,7 @@ public interface ReadonlyPawnsBoardModel {
    *                                  for a card in the board
    * @throws IllegalStateException    if the game has not started
    */
-  Cell getCellAt(int row, int col);
+  ReadOnlyCell getCellAt(int row, int col);
 
   /**
    * Returns a copy of the player's current hand. If their hand is empty, then an empty

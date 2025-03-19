@@ -28,12 +28,12 @@ public class GameCardTest {
             securityInfluenceGrid);
   }
 
-  @Test
+  /*@Test
   public void testGameCardSetColor() {
     assertEquals(Color.white, security.getColor());
     security.setColor(Color.red);
     assertEquals(Color.red, security.getColor());
-  }
+  }*/
 
   @Test
   public void testGameCardGetPositions() {

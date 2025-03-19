@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.QueensBlood;
+import cs3500.pawnsboard.model.ReadOnlyCell;
 
 /**
  * Represents a PawnsBoardTextualView that prints out a textual representation of the game board.
@@ -30,7 +31,7 @@ public class PawnsBoardTextualView implements QueensBloodTextualView {
 
       board += p1 + " ";
       for (int col = 0; col < model.getWidth(); col++) {
-        Cell cell = model.getCellAt(row, col);
+        ReadOnlyCell cell = model.getCellAt(row, col);
         board += cell.toString();
       }
       board += " " + p2 + "\n";

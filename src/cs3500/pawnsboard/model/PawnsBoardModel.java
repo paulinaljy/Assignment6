@@ -378,7 +378,7 @@ public class PawnsBoardModel implements QueensBlood {
     for (ArrayList<Cell> row : board) {
       ArrayList<Cell> rowCopy = new ArrayList<>();
       for (Cell cell : row) {
-        rowCopy.add(cell.getCell());  // Assuming Cell has a copy constructor
+        rowCopy.add(cell.getCell());
       }
       boardCopy.add(rowCopy);
     }

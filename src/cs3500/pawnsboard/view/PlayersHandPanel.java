@@ -1,20 +1,25 @@
 package cs3500.pawnsboard.view;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.ReadOnlyGameCard;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PlayersHandPanel extends JPanel {
 
   private GameCardButton selectedCard = null;
+  private List<GameCardButton> playersHand;
   private final ReadonlyPawnsBoardModel pawnsBoardModel;
 
   public PlayersHandPanel(ReadonlyPawnsBoardModel pawnsBoardModel) {
@@ -30,10 +35,10 @@ public class PlayersHandPanel extends JPanel {
   }
 
   private void createHand() {
+    this.playersHand = new ArrayList<GameCardButton>();
     ArrayList<GameCard> playersHand = new ArrayList<GameCard>(pawnsBoardModel.getHand());
     for (int i = 0; i < playersHand.size(); i++) {
-      GameCard card = playersHand.get(i);
-      GameCardButton cardButton = new GameCardButton(pawnsBoardModel, card, i);
+      GameCardButton cardButton = new GameCardButton(pawnsBoardModel, i);
       cardButton.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -49,12 +54,21 @@ public class PlayersHandPanel extends JPanel {
             // move current card up
             selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() - 10);
           }
+
+          getTopLevelAncestor().requestFocus();
         }
       });
+      this.playersHand.add(cardButton);
       this.add(cardButton);
     }
 
     revalidate();
+  }
+
+  public void updateCard() {
+    for (int i = 0; i < playersHand.size(); i++) {
+      playersHand.get(i).updateCard();
+    }
   }
 
   public GameCardButton getSelectedCard() {
