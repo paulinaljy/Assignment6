@@ -29,8 +29,16 @@ public class PlayersHandPanel extends JPanel {
 
     setLayout(new GridLayout(1, 1));
     setBackground(Color.white);
-    //setLayout(new FlowLayout(FlowLayout.LEFT));
     createHand();
+    highlightTurn();
+  }
+
+  private void highlightTurn() {
+    if (pawnsBoardModel.getCurrentPlayerID() == this.playerID) {
+      setBorder(BorderFactory.createLineBorder(Color.yellow, 5));
+    } else {
+      setBorder(BorderFactory.createLineBorder(this.getBackground(), 0));
+    }
   }
 
   private void createHand() {
@@ -38,31 +46,16 @@ public class PlayersHandPanel extends JPanel {
     ArrayList<GameCard> playersHand = new ArrayList<GameCard>(pawnsBoardModel.getHand(playerID));
     for (int i = 0; i < playersHand.size(); i++) {
       createNewCard(i);
-      //GameCardButton cardButton = new GameCardButton(pawnsBoardModel, i, playerID);
-      /*cardButton.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          if (selectedCard == cardButton) { // if selected card that is already selected
-            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // moves card down
-            selectedCard = null; // deselect card
-          } else {
-            if (selectedCard != null) { // if a card is already selected + select different card
-              selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // move originally selected card down
-            }
-
-            selectedCard = cardButton; // set selected card to current card
-            // move current card up
-            selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() - 10);
-          }
-
-          getTopLevelAncestor().requestFocus();
-        }
-      });
-      this.playersHand.add(cardButton);
-      this.add(cardButton);*/
     }
-
     revalidate();
+  }
+
+  class PlayersHandMouseListener extends MouseAdapter {
+    private ViewActions observer;
+
+    public PlayersHandMouseListener(ViewActions observer) {
+      this.observer = observer;
+    }
   }
 
   private void createNewCard(int cardIdx) {
@@ -70,6 +63,9 @@ public class PlayersHandPanel extends JPanel {
     cardButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (pawnsBoardModel.isGameOver()) {
+          return;
+        }
         if (selectedCard == cardButton) { // if selected card that is already selected
           selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // moves card down
           selectedCard = null; // deselect card
@@ -86,25 +82,13 @@ public class PlayersHandPanel extends JPanel {
         getTopLevelAncestor().requestFocus();
       }
     });
-    this.playersHand.add(cardButton);
     this.add(cardButton);
   }
 
-  public void reset() {
-    //selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
-    playersHand.remove(selectedCard); // remove from players hand
-    this.remove(selectedCard); // remove from display
-    selectedCard = null;
-  }
-
-  public void updateCard() {
-    List<GameCard> gamePlayersHand = pawnsBoardModel.getHand(playerID);
-    for (int i = 0; i < gamePlayersHand.size(); i++) {
-      if (i >= playersHand.size()) {
-        createNewCard(i);
-      }
-      playersHand.get(i).updateCard();
-    }
+  public void refreshHand() {
+    this.removeAll();
+    this.createHand();
+    this.highlightTurn();
   }
 
   public GameCardButton getSelectedCard() {

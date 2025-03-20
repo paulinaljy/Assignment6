@@ -24,9 +24,7 @@ public class GameCardButton extends JButton {
     this.pawnsBoardModel = pawnsBoardModel;
     this.cardIdx = cardIdx;
 
-    setFocusPainted(false);
     setBorderPainted(false);
-    setContentAreaFilled(false);
     setOpaque(true);
     setBackground(pawnsBoardModel.getPlayerColor(playerID));
     setPreferredSize(new Dimension(120, 200));

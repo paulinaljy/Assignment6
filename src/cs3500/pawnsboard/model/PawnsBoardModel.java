@@ -268,6 +268,7 @@ public class PawnsBoardModel implements QueensBlood {
     this.players[1] = new Player(Color.BLUE, p2Deck, handSize, rand, shuffle);
     this.gameStarted = true;
     this.pass = 0;
+    this.drawNextCard();
   }
 
   @Override
@@ -402,5 +403,20 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public Color getPlayerColor(int playerID) {
     return players[playerID - 1].getColor();
+  }
+
+  @Override
+  public int getPlayerTotalScore(int playerID) {
+    getTotalPlayerScore();
+    if ((playerID - 1) == 0) {
+      return p1TotalScore;
+    } else {
+      return p2TotalScore;
+    }
+  }
+
+  @Override
+  public int getCurrentPlayerID() {
+    return turn + 1;
   }
 }

@@ -105,5 +105,19 @@ public interface ReadonlyPawnsBoardModel {
    */
   Player getOwnerOfCell(int row, int col);
 
+  /**
+   * Returns the player color based on the given player ID.
+   * @param playerID the id of the player, either 1 or 2 representing a player in the game
+   * @return color of the player
+   */
   Color getPlayerColor(int playerID);
+
+  /**
+   * Returns the player's current score in the game given the player ID.
+   * @param playerID the ide of the player, either 1 or 2 representing a player in the game
+   * @return value representing the score
+   */
+  int getPlayerTotalScore(int playerID);
+
+  int getCurrentPlayerID();
 }

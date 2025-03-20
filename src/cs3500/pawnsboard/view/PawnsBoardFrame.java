@@ -9,12 +9,14 @@ import javax.swing.*;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
+  private ReadonlyPawnsBoardModel pawnsBoardModel;
   private PawnsBoardPanel boardPanel;
   private PlayersHandPanel playersHandPanel;
   private int playerID;
 
   public PawnsBoardFrame(ReadonlyPawnsBoardModel pawnsBoardModel, int playerID) {
     super("Player " + playerID);
+    this.pawnsBoardModel = pawnsBoardModel;
     this.playerID = playerID;
     setSize((pawnsBoardModel.getWidth() + 2) * 100, (pawnsBoardModel.getHeight() + 2) * 100); // physical display dimensions
     setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -31,7 +33,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
   @Override
   public void refresh() {
-    playersHandPanel.updateCard();
+    playersHandPanel.refreshHand();
     this.repaint();
   }
 
@@ -47,25 +49,25 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
     this.addKeyListener(new KeyListener() {
       @Override
       public void keyPressed(KeyEvent e) {
+        if ((pawnsBoardModel.getCurrentPlayerID() != playerID) || pawnsBoardModel.isGameOver()) {
+          return;
+        }
         switch (e.getKeyCode()) {
           case KeyEvent.VK_Q: // quit game
-            System.out.println("quit");
             observer.quit();
             break;
 
           case KeyEvent.VK_ENTER: // confirm move
-            System.out.println("enter pressed");
             Point selectedCell = boardPanel.getSelectedBoardCell();
+            observer.setSelectedCell((int)selectedCell.getY(), (int)selectedCell.getX() - 1);
             int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
+            observer.setCardIdx(cardIdx);
             observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX() - 1);
             boardPanel.reset();
-            playersHandPanel.reset();
-            playersHandPanel.updateCard();
             break;
 
           case KeyEvent.VK_SPACE: // pass move
             observer.pass();
-            //playersHandPanel.updateCard();
             break;
 
           default:

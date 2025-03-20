@@ -34,6 +34,7 @@ public final class PawnsBoardGame {
 
     PawnsBoardFrame view1 = new PawnsBoardFrame(model, 1);
     PawnsBoardFrame view2 = new PawnsBoardFrame(model, 2);
+    view2.setLocation(view1.getX() + view1.getWidth(), view1.getY());
     view1.setVisible(true);
     view2.setVisible(true);
     PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view1, view2);

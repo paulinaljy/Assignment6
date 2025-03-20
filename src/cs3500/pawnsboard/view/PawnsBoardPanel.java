@@ -30,7 +30,7 @@ public class PawnsBoardPanel extends JPanel {
     this.model = model;
     this.selectedBoardCell = null;
 
-    this.addMouseListener(new PawnsBoardMouseListener());
+    //this.addMouseListener(new PawnsBoardMouseListener());
   }
 
   @Override
@@ -183,21 +183,26 @@ public class PawnsBoardPanel extends JPanel {
     return selectedBoardCell;
   }
 
-  public void subscribe(ViewActions observer) {
-
-  }
-
   public void reset() {
     selectedBoardCell = null;
   }
 
-  class PawnsBoardMouseListener extends MouseAdapter {
+  public void subscribe(ViewActions observer) {
+    this.addMouseListener(new PawnsBoardMouseListener(observer));
+  }
 
-    public PawnsBoardMouseListener() {
+  class PawnsBoardMouseListener extends MouseAdapter {
+    private ViewActions observer;
+    public PawnsBoardMouseListener(ViewActions observer) {
+      this.observer = observer;
     }
 
     public void mouseClicked(MouseEvent evt) {
       Point2D physical = evt.getPoint(); // coordinate of actual (x,y) of physical display in the panel
+
+      if (model.isGameOver()) {
+        return;
+      }
 
       try {
         // create objects to convert
@@ -218,6 +223,7 @@ public class PawnsBoardPanel extends JPanel {
         } else {
           selectedBoardCell = new Point((int)model.getX(), (int)model.getY());
         }
+        observer.setSelectedCell((int)selectedBoardCell.getX(), (int)selectedBoardCell.getY());
         repaint();
 
       } catch (NoninvertibleTransformException ex) {

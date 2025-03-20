@@ -8,5 +8,9 @@ public interface ViewActions {
 
   void pass();
 
+  void setCardIdx(int cardIdx);
+
+  void setSelectedCell(int row, int col);
+
 }
 

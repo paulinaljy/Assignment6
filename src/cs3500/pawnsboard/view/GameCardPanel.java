@@ -28,7 +28,6 @@ public class GameCardPanel extends JPanel {
     this.pawnsBoardModel = pawnsBoardModel;
     this.cardIdx = cardIdx;
 
-    setBackground(pawnsBoardModel.getPlayerColor(playerID));
     setPreferredSize(new Dimension(120, 200));
 
     // text panel for name, cost value
