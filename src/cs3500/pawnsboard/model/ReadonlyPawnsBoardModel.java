@@ -1,5 +1,6 @@
 package cs3500.pawnsboard.model;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +53,11 @@ public interface ReadonlyPawnsBoardModel {
    * Returns a copy of the player's current hand. If their hand is empty, then an empty
    * list is returned.
    *
+   * @param playerID the current player of the game
    * @return a copy of the player's current hand
    * @throws IllegalStateException if the game has not started
    */
-  List<GameCard> getHand();
+  List<GameCard> getHand(int playerID);
 
   /**
    * Returns the winner of the game based on the player scores.
@@ -102,4 +104,6 @@ public interface ReadonlyPawnsBoardModel {
    * @return Player that owns the cell
    */
   Player getOwnerOfCell(int row, int col);
+
+  Color getPlayerColor(int playerID);
 }

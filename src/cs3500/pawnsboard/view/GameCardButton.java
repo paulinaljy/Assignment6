@@ -13,9 +13,11 @@ public class GameCardButton extends JButton {
   private final ReadonlyPawnsBoardModel pawnsBoardModel;
   private GameCardPanel cardPanel;
   private int cardIdx;
+  private int playerID;
 
-  public GameCardButton(ReadonlyPawnsBoardModel pawnsBoardModel, int cardIdx) {
+  public GameCardButton(ReadonlyPawnsBoardModel pawnsBoardModel, int cardIdx, int playerID) {
     super();
+    this.playerID = playerID;
     if (pawnsBoardModel == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
@@ -26,10 +28,10 @@ public class GameCardButton extends JButton {
     setBorderPainted(false);
     setContentAreaFilled(false);
     setOpaque(true);
-    setBackground(pawnsBoardModel.getCurrentPlayer().getColor());
+    setBackground(pawnsBoardModel.getPlayerColor(playerID));
     setPreferredSize(new Dimension(120, 200));
 
-    cardPanel = new GameCardPanel(pawnsBoardModel, cardIdx);
+    cardPanel = new GameCardPanel(pawnsBoardModel, cardIdx, playerID);
     cardPanel.setOpaque(false);
     add(cardPanel);
   }

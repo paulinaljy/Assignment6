@@ -17,16 +17,18 @@ public class GameCardPanel extends JPanel {
   private JLabel value;
   private JPanel influenceGrid;
   private int cardIdx;
+  private int playerID;
 
-  public GameCardPanel(ReadonlyPawnsBoardModel pawnsBoardModel, int cardIdx) {
+  public GameCardPanel(ReadonlyPawnsBoardModel pawnsBoardModel, int cardIdx, int playerID) {
     super();
+    this.playerID = playerID;
     if (pawnsBoardModel == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.pawnsBoardModel = pawnsBoardModel;
     this.cardIdx = cardIdx;
 
-    setBackground(pawnsBoardModel.getCurrentPlayer().getColor());
+    setBackground(pawnsBoardModel.getPlayerColor(playerID));
     setPreferredSize(new Dimension(120, 200));
 
     // text panel for name, cost value
@@ -34,7 +36,7 @@ public class GameCardPanel extends JPanel {
     cardInfo.setLayout(new BoxLayout(cardInfo, BoxLayout.Y_AXIS));
     cardInfo.setOpaque(false);
 
-    ReadOnlyGameCard card = pawnsBoardModel.getHand().get(cardIdx);
+    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
     name = new JLabel(card.getName());
     cost = new JLabel("Cost: " + card.getCost());
     value = new JLabel("Value: " + card.getValue());
@@ -51,11 +53,12 @@ public class GameCardPanel extends JPanel {
 
     add(cardInfo, BorderLayout.NORTH);
     add(influenceGrid, BorderLayout.CENTER);
+    setBorder(BorderFactory.createLineBorder(Color.black));
   }
 
   public void updateCard() {
-    ReadOnlyGameCard card = pawnsBoardModel.getHand().get(cardIdx);
-    setBackground(pawnsBoardModel.getCurrentPlayer().getColor());
+    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
+    setBackground(pawnsBoardModel.getPlayerColor(playerID));
     setOpaque(true);
 
     name.setText(card.getName());
@@ -69,7 +72,7 @@ public class GameCardPanel extends JPanel {
   }
 
   private void updateGrid() {
-    ReadOnlyGameCard card = pawnsBoardModel.getHand().get(cardIdx);
+    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
     int gridIdx = 0;
     for (int row = 0; row < 5; row++) {
       for (int col = 0; col < 5; col++) {
@@ -89,7 +92,7 @@ public class GameCardPanel extends JPanel {
   }
 
   private void drawGrid() {
-    ReadOnlyGameCard card = pawnsBoardModel.getHand().get(cardIdx);
+    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
     for (int row = 0; row < 5; row++) {
       for (int col = 0; col < 5; col++) {
         JPanel cell = new JPanel();

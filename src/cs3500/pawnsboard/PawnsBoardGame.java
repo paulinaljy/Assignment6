@@ -32,8 +32,8 @@ public final class PawnsBoardGame {
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
     model.startGame(p1Deck, p2Deck, 5, false);
 
-    PawnsBoardFrame view1 = new PawnsBoardFrame(model);
-    PawnsBoardFrame view2 = new PawnsBoardFrame(model);
+    PawnsBoardFrame view1 = new PawnsBoardFrame(model, 1);
+    PawnsBoardFrame view2 = new PawnsBoardFrame(model, 2);
     view1.setVisible(true);
     view2.setVisible(true);
     PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view1, view2);

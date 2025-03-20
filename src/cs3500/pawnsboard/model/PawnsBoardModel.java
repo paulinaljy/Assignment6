@@ -368,10 +368,10 @@ public class PawnsBoardModel implements QueensBlood {
   }
 
   @Override
-  public List<GameCard> getHand() {
+  public List<GameCard> getHand(int playerID) {
     this.isGameStarted();
-    Player currentPlayer = this.getCurrentPlayer();
-    return currentPlayer.getHand();
+    //Player currentPlayer = this.getCurrentPlayer();
+    return players[playerID - 1].getHand();
   }
 
   @Override
@@ -397,5 +397,10 @@ public class PawnsBoardModel implements QueensBlood {
     } else {
       return null;
     }
+  }
+
+  @Override
+  public Color getPlayerColor(int playerID) {
+    return players[playerID - 1].getColor();
   }
 }

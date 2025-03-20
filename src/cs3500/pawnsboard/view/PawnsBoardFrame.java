@@ -11,13 +11,15 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
   private PawnsBoardPanel boardPanel;
   private PlayersHandPanel playersHandPanel;
+  private int playerID;
 
-  public PawnsBoardFrame(ReadonlyPawnsBoardModel pawnsBoardModel) {
-    super();
+  public PawnsBoardFrame(ReadonlyPawnsBoardModel pawnsBoardModel, int playerID) {
+    super("Player " + playerID);
+    this.playerID = playerID;
     setSize((pawnsBoardModel.getWidth() + 2) * 100, (pawnsBoardModel.getHeight() + 2) * 100); // physical display dimensions
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     boardPanel = new PawnsBoardPanel(pawnsBoardModel);
-    playersHandPanel = new PlayersHandPanel(pawnsBoardModel);
+    playersHandPanel = new PlayersHandPanel(pawnsBoardModel, playerID);
     JPanel panel = new JPanel();
     panel.setLayout(new GridLayout(2, 1));
     panel.add(boardPanel);
@@ -29,6 +31,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
   @Override
   public void refresh() {
+    playersHandPanel.updateCard();
     this.repaint();
   }
 
@@ -62,6 +65,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
           case KeyEvent.VK_SPACE: // pass move
             observer.pass();
+            //playersHandPanel.updateCard();
             break;
 
           default:

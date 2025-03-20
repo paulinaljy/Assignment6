@@ -45,8 +45,8 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
 
   @Override
   public void pass() {
-    model.pass();
     model.drawNextCard();
+    model.pass();
     view1.refresh();
     view2.refresh();
   }
