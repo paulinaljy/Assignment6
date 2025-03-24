@@ -1,4 +1,4 @@
-package cs3500.pawnsboard.model.strategy;
+package cs3500.pawnsboard.strategy;
 
 public class Move {
   private int cardIdx;

@@ -1,4 +1,4 @@
-package cs3500.pawnsboard.model.strategy;
+package cs3500.pawnsboard.strategy;
 
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;

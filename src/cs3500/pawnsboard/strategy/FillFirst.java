@@ -1,10 +1,9 @@
-package cs3500.pawnsboard.model.strategy;
+package cs3500.pawnsboard.strategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cs3500.pawnsboard.model.Cell;
-import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
