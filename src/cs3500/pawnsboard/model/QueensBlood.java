@@ -61,4 +61,5 @@ public interface QueensBlood extends ReadonlyPawnsBoardModel {
    */
 
   void startGame(List<GameCard> p1Deck, List<GameCard> p2Deck, int handSize, boolean shuffle);
+
 }

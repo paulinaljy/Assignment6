@@ -419,4 +419,5 @@ public class PawnsBoardModel implements QueensBlood {
   public int getCurrentPlayerID() {
     return turn + 1;
   }
+
 }
