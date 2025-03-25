@@ -42,16 +42,20 @@ public class BlockOpponent implements Strategy {
       List<Position> influencedCells = card.getPositions();
       for (int row = 0; row < model.getHeight(); row++) {
         for (int col = 0; col < model.getWidth(); col++) {
-          ReadOnlyCell cell = model.getCellAt(row, col);
-          if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor())
-                  || cell.getValue() < player.getHand().get(h).getCost())) {
+          int newCol = col;
+          if (player.getColor().equals(Color.blue)) {
+            newCol = model.getWidth() - 1 - col;
+          }
+          ReadOnlyCell cell = model.getCellAt(row, newCol);
+          if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor()))
+                  || cell.getValue() < player.getHand().get(h).getCost()) {
             continue;
           }
           for (Position pos : influencedCells) {
             int rowPosition = pos.getRowDelta() + row;
-            int colPosition = pos.getColDelta() + col;
+            int colPosition = pos.getColDelta() + newCol;
             if (rowPosition == targetRow && colPosition == targetCol) {
-              return new Move(h, row, col, false);
+              return new Move(h, row, newCol, false);
             }
           }
         }

@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -20,12 +18,11 @@ import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
-import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
+import cs3500.pawnsboard.strategy.BlockOpponent;
 import cs3500.pawnsboard.strategy.ControlBoard;
 import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.strategy.MaxRowScore;
 import cs3500.pawnsboard.strategy.Move;
-import cs3500.pawnsboard.view.PawnsBoardTextualView;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -58,6 +55,7 @@ public class StrategyTest {
   private FillFirst fillFirstStrategy;
   private MaxRowScore maxRowScoreStrategy;
   private ControlBoard controlBoardStrategy;
+  private BlockOpponent blockOpponentStrategy;
 
   @Before
   public void setup() {
@@ -112,8 +110,8 @@ public class StrategyTest {
             topCaveStalker, right1CaveStalker, right2CaveStalker,
             right3CaveStalker, bottomCaveStalker));
 
-    Position rightLobber = new Position(0, 2);
-    ArrayList<Position> lobberInfluenceGrid = new ArrayList<Position>(Arrays.asList(rightLobber));
+    Position leftLobber = new Position(0, -2);
+    ArrayList<Position> lobberInfluenceGrid = new ArrayList<Position>(Arrays.asList(leftLobber));
 
     emptyCell = new EmptyCell();
     redPawns = new Pawns(Color.red);
@@ -145,6 +143,7 @@ public class StrategyTest {
     fillFirstStrategy = new FillFirst();
     maxRowScoreStrategy = new MaxRowScore();
     controlBoardStrategy = new ControlBoard();
+    blockOpponentStrategy = new BlockOpponent();
   }
 
   // test for player 1 find first card that is placeable in first available cell (0,0)
@@ -243,10 +242,19 @@ public class StrategyTest {
     mockModel.startGame(p1Deck, p2Deck, 5, true);
     mockModel.pass();
 
-    System.out.println(mockModel.getHand(mockModel.getCurrentPlayerID()));
     Move move = fillFirstStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
     assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) " +
             "(2,3) (2,2) (2,1) (2,0) (0,4) ", log.toString());
+  }
+
+  @Test
+  public void testFillFirstPass() {
+    model.startGame(new ArrayList<GameCard>(Arrays.asList(sweeper, trooper, cavestalker, lobber,
+            sweeper, trooper, cavestalker, lobber, sweeper, trooper, cavestalker, lobber)),
+            p2Deck, 5, true); // all cards cost = 2
+
+    assertEquals(new Move(-1, -1, -1, true),
+            fillFirstStrategy.chooseMove(model, model.getCurrentPlayer()));
   }
 
   // test for player 1 find highest value card placeable in first row
@@ -305,10 +313,13 @@ public class StrategyTest {
     StringBuilder log = new StringBuilder();
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
+    mockModel.pass();
+    mockModel.placeCardInPosition(2, 0, 4); // player 2 placed mandragora, value 2
 
+    // row 0 => no cards for p1 higher score
+    // row 1 => mandragora => max row score
     Move move = maxRowScoreStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
-    // cavestalker => sweeper => mandragora
-    assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (0,0) (0,1) (0,2) (0,3) (0,4) (0,0) ",
+    assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (1,0) ",
             log.toString());
   }
 
@@ -461,5 +472,105 @@ public class StrategyTest {
 
     assertEquals(new Move(-1, -1, -1, true),
             controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testBlockOpponentPlayer1() {
+    model.startGame(p1Deck, p2Deck, 5, false);
+    model.placeCardInPosition(0, 1, 0); // p1 placed security
+    model.drawNextCard();
+    model.placeCardInPosition(0, 1, 4); // p2 placed security
+    model.drawNextCard();
+    model.placeCardInPosition(2, 1, 1); // p1 placed crab
+    model.drawNextCard();
+    assertEquals(Arrays.asList(bee, sweeper, crab, mandragora, queen, trooper),
+            model.getHand(model.getCurrentPlayerID())); // opponent (player 2's) current hand
+
+    // bee => target cell: (0,4)
+    assertEquals(new Move(0, 0, 4, false),
+            fillFirstStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // trooper => target cell: (0,4)
+    assertEquals(new Move(5, 0, 4, false),
+            maxRowScoreStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // crab => target cell: (1,3)
+    assertEquals(new Move(2, 1, 3, false),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    model.pass();
+    model.drawNextCard();
+    assertEquals(Arrays.asList(bee, sweeper, mandragora, queen, trooper, cavestalker),
+            model.getHand(model.getCurrentPlayerID())); // player 1 current hand
+
+    // player 1 => block best move (1,3) with mandragora in (1,2)
+    assertEquals(new Move(2, 1, 2, false),
+            blockOpponentStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testBlockOpponentPlayer2() {
+    model.startGame(p1Deck, p2Deck, 5, false);
+    model.placeCardInPosition(0, 1, 0); // p1 placed security
+    model.drawNextCard();
+    model.placeCardInPosition(3, 2, 4); // p2 placed crab
+    model.drawNextCard();
+    model.placeCardInPosition(2, 1, 1); // p1 placed crab
+    model.drawNextCard();
+    model.placeCardInPosition(2, 1, 4); // p2 placed sweeper
+    model.drawNextCard();
+    model.pass();
+    model.drawNextCard();
+    model.placeCardInPosition(4, 2, 3); // p2 placed trooper
+    assertEquals(Arrays.asList(bee, sweeper, mandragora, queen, trooper, cavestalker),
+            model.getHand(model.getCurrentPlayerID())); // opponent (player 1's) current hand*/
+
+    // bee => target cell: (0,0)
+    assertEquals(new Move(0, 0, 0, false),
+            fillFirstStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // trooper => target cell: (0,0)
+    assertEquals(new Move(4, 0, 0, false),
+            maxRowScoreStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // crab => target cell: (0,1)
+    assertEquals(new Move(2, 0, 1, false),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    model.pass();
+    model.drawNextCard();
+    assertEquals(Arrays.asList(security, bee, mandragora, queen, cavestalker, lobber),
+            model.getHand(model.getCurrentPlayerID())); // player 2 current hand
+
+    assertEquals(new Move(5, 0, 3, false),
+            blockOpponentStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testBlockOpponentPass() {
+    model.startGame(p1Deck, p2Deck, 5, true);
+    assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
+            model.getHand(model.getCurrentPlayerID())); // player 1's current hand
+    model.pass();
+    model.drawNextCard();
+    assertEquals(Arrays.asList(lobber, bee, mandragora, crab, sweeper, security),
+            model.getHand(model.getCurrentPlayerID())); // opponent (player 2's) current hand
+
+    // bee => target cell: (0,4)
+    assertEquals(new Move(1, 0, 4, false),
+            fillFirstStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // mandragora => target cell: (0,4)
+    assertEquals(new Move(2, 0, 4, false),
+            maxRowScoreStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    // crab => target cell: (0,4)
+    assertEquals(new Move(3, 0, 4, false),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+
+    model.pass();
+    // player 1 => no cards can block (0,4) (0,3)
+    assertEquals(new Move(-1, -1, -1, true),
+            blockOpponentStrategy.chooseMove(model, model.getCurrentPlayer()));
   }
 }

@@ -17,7 +17,8 @@ public class ControlBoard implements Strategy {
     int maxCount = 0;
     Point maxCellPosition = null;
     int maxCardIdx = -1;
-    List<GameCard> hand = model.getHand(model.getCurrentPlayerID());
+
+    List<GameCard> hand = player.getHand();
     for (int row = 0; row < model.getHeight(); row++) {
       for (int col = 0; col < model.getWidth(); col++) {
         int newCol = col;
@@ -41,7 +42,7 @@ public class ControlBoard implements Strategy {
           if (netCount > maxCount) {
             maxCount = netCount; // replaces max net count with current net count
             maxCardIdx = h;
-            maxCellPosition = new Point(row, col);
+            maxCellPosition = new Point(row, newCol);
           }
         }
       }

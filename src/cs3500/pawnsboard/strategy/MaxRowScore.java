@@ -31,7 +31,6 @@ public class MaxRowScore implements Strategy {
 
     List<GameCard> hand = new ArrayList<>(model.getHand(currentPlayerID));
     hand.sort(Comparator.comparingInt(GameCard::getValue).reversed()); // sort hand by order of card value - highest to lowest
-    System.out.println(hand);
 
     for (int row = 0; row < board.size(); row++) {
       int score = (currentPlayerID == 1) ? model.getP1RowScore(row) : model.getP2RowScore(row);
