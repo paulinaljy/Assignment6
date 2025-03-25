@@ -20,17 +20,26 @@ public class ControlBoard implements Strategy {
     List<GameCard> hand = model.getHand(model.getCurrentPlayerID());
     for (int row = 0; row < model.getHeight(); row++) {
       for (int col = 0; col < model.getWidth(); col++) {
-        ReadOnlyCell cell = model.getCellAt(row, col);
+        int newCol = col;
+        if (player.getColor().equals(Color.blue)) {
+          newCol = model.getWidth() - 1 - col;
+        }
+        ReadOnlyCell cell = model.getCellAt(row, newCol);
         if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor()))) {
-          continue;
+          continue; // if card is not pawns, move to next cell
         }
 
         for (int h = 0; h < hand.size(); h++) {
           GameCard card = hand.get(h);
+          int cardCost = card.getCost(); // gets cost of card
+          if (cell.getValue() < cardCost) {
+            continue; // move on to next card in hand
+          }
+
           List<Position> influencedCells = card.getPositions();
-          int netCount = getNetCount(model, influencedCells, row, col, player);
+          int netCount = getNetCount(model, influencedCells, row, newCol, player);
           if (netCount > maxCount) {
-            maxCount = netCount;
+            maxCount = netCount; // replaces max net count with current net count
             maxCardIdx = h;
             maxCellPosition = new Point(row, col);
           }
@@ -51,13 +60,13 @@ public class ControlBoard implements Strategy {
       int colPosition = influencedCells.get(i).getColDelta() + col;
       if (rowPosition >= 0 && rowPosition < model.getHeight()
               && colPosition >= 0 && colPosition < model.getWidth()) {
-        ReadOnlyCell cell = model.getCellAt(rowPosition, colPosition);
+        ReadOnlyCell cell = model.getBoard().get(rowPosition).get(colPosition);
         if (cell.isCardPlaceable()) { // is pawns
           if (!(cell.getOwnedColor().equals(currentPlayer.getColor()))) {
-            netCount += 1;
+            netCount += 1; // take ownership of other player's pawns
           }
         } else if (!cell.isGameCard()) { // is empty
-          netCount += 1;
+          netCount += 1; // add to net count
         }
       }
     }

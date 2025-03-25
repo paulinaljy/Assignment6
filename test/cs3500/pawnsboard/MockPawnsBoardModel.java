@@ -12,6 +12,7 @@ import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
+import cs3500.pawnsboard.model.ReadOnlyCell;
 
 public class MockPawnsBoardModel implements QueensBlood {
   private StringBuilder log;
@@ -134,7 +135,7 @@ public class MockPawnsBoardModel implements QueensBlood {
    * @param currentPlayer the current turn player of the game
    */
   private void influenceCellEffect(int row, int col, Player currentPlayer) {
-    Cell influencedCell = this.getCellAt(row, col);
+    Cell influencedCell = this.getCellAtUninfluenced(row, col);
     Cell newCell = influencedCell.influence(currentPlayer);
     this.board.get(row).set(col, newCell);
   }
@@ -195,12 +196,16 @@ public class MockPawnsBoardModel implements QueensBlood {
   private int getPlayerScore(Color playerColor, int row) {
     int score = 0;
     for (int col = 0; col < this.board.get(row).size(); col++) {
-      Cell cell = getCellAt(row, col);
+      ReadOnlyCell cell = getCellAtUninfluenced(row, col);
       if (cell.isGameCard() && cell.getOwnedColor() == playerColor) {
         score += cell.getValue(); // gets the value of the card if Player owns color and is GameCard
       }
     }
     return score;
+  }
+
+  private Cell getCellAtUninfluenced(int row, int col) {
+    return this.board.get(row).get(col);
   }
 
   @Override
@@ -234,5 +239,14 @@ public class MockPawnsBoardModel implements QueensBlood {
   @Override
   public int getCurrentPlayerID() {
     return turn + 1;
+  }
+
+  @Override
+  public Player getPlayerByColor(Color color) {
+    if (color.equals(Color.red)) {
+      return players[0];
+    } else {
+      return players[1];
+    }
   }
 }

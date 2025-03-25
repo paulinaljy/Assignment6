@@ -18,9 +18,11 @@ import cs3500.pawnsboard.view.PawnsBoardFrame;
  */
 public final class PawnsBoardGame {
   /**
-   * Runs the PawnsBoardGame given the arguments.Initialize a model with a board size of 3 rows by
-   * 5 columns. Reads a deck configuration file and creates a deck of card for player 1 and player
-   * 2. Starts the game with the two decks of card and hand size of 5.
+   * Runs the PawnsBoardGame given the arguments.Initialize a model with a board size of 5 rows by
+   * 7 columns. Reads a deck configuration file and creates a deck of card for player 1 and player
+   * 2. Starts the game with the two decks of card and hand size of 5. Displays the GUI view of each
+   * player, each with their respective hand. Player 1 window is displayed on the left and player 2
+   * window is displayed on the right.
    * @param args an array of string with the arguments entered by the user
    */
   public static void main(String[] args) throws IOException {

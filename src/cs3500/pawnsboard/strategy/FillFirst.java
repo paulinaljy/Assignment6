@@ -20,22 +20,16 @@ public class FillFirst implements Strategy {
     this.player = player;
 
     for (int h = 0; h < player.getHandSize(); h++) {
-      for (int r = 0; r < board.size(); r++) {
-        if (player.getColor().equals(Color.red)) {
-          for (int c = 0; c < board.get(0).size(); c++) {
-            ReadOnlyCell cell = model.getCellAt(r, c);
-            if (cell.isCardPlaceable() && cell.getOwnedColor().equals(Color.red)
-                    && cell.getValue() >= player.getHand().get(h).getCost()) {
-              return new Move(h, r, c, false);
-            }
+      for (int row = 0; row < board.size(); row++) {
+        for (int col = 0; col < board.get(row).size(); col++) {
+          int newCol = col;
+          if (player.getColor().equals(Color.blue)) {
+            newCol = model.getWidth() - 1 - col;
           }
-        } else {
-          for (int c = model.getWidth() - 1; c >= 0; c--) {
-            ReadOnlyCell cell = model.getCellAt(r, c);
-            if (cell.isCardPlaceable() && cell.getOwnedColor().equals(Color.blue)
-                    && cell.getValue() >= player.getHand().get(h).getCost()) {
-              return new Move(h, r, c, false);
-            }
+          ReadOnlyCell cell = model.getCellAt(row, newCol);
+          if (cell.isCardPlaceable() && cell.getOwnedColor().equals(player.getColor())
+                  && cell.getValue() >= player.getHand().get(h).getCost()) {
+            return new Move(h, row, newCol, false);
           }
         }
       }

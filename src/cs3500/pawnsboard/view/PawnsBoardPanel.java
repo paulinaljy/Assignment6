@@ -16,11 +16,18 @@ import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.model.ReadOnlyCell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
+/**
+ * Represents a PawnsBoardPanel that has behaviors including drawing and updating the game board
+ * (cells, game cards, pawns) after clicked mouse events.
+ */
 public class PawnsBoardPanel extends JPanel {
-
   private final ReadonlyPawnsBoardModel model;
   private Point selectedBoardCell;
 
+  /**
+   * Initializes a PawnsBoardPanel with a read only pawns board model.
+   * @param model the model of the game
+   */
   public PawnsBoardPanel(ReadonlyPawnsBoardModel model) {
     super();
     if (model == null) {
@@ -170,12 +177,14 @@ public class PawnsBoardPanel extends JPanel {
   }
 
   /**
-   * Draws the pawns of the
-   * @param g2d
-   * @param row
-   * @param col
-   * @param value
-   * @param color
+   * Draws the pawns on the game board given the Graphics2D object, row, col, value, and color.
+   * Converts the given model coordinates to logical and then draws ovals based on that converted
+   * coordinates, given color, and given value (count of pawns).
+   * @param g2d Graphics2D object
+   * @param row model row index of the cell to be drawn (0-index)
+   * @param col model col index of the cell to be drawn (0-index)
+   * @param value the count of the pawns
+   * @param color the color of the cell
    */
   private void drawPawns(Graphics2D g2d, int row, int col, int value, Color color) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
@@ -209,11 +218,15 @@ public class PawnsBoardPanel extends JPanel {
   }
 
   /**
-   *
-   * @param g2d
-   * @param row
-   * @param col
-   * @param value
+   * Draws the given value on the game board. Converts the given model coordinates to logical and
+   * then draws a number string based on that converted coordinates and given value. If the value
+   * is a game card, draws the value on the given (row, col) cell coordinates on the board. If the
+   * value is a score, draws the value on the given (row, col) cell coordinates on the side of the
+   * board.
+   * @param g2d Graphics2D object
+   * @param row model row index of the cell to be drawn (0-index)
+   * @param col model col index of the cell to be drawn (0-index)
+   * @param value number value to be drawn
    */
   private void drawValue(Graphics2D g2d, int row, int col, int value) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
@@ -227,8 +240,8 @@ public class PawnsBoardPanel extends JPanel {
   }
 
   /**
-   *
-   * @return
+   * Returns a point with the x and y positions of the selected cell on the board.
+   * @return a point
    */
   public Point getSelectedBoardCell() {
     return selectedBoardCell;
@@ -242,28 +255,38 @@ public class PawnsBoardPanel extends JPanel {
   }
 
   /**
-   *
-   * @param observer
+   * Adds a new mouse listener with the given observer to this pawns board panel.
+   * @param observer the observer
    */
   public void subscribe(ViewActions observer) {
     this.addMouseListener(new PawnsBoardMouseListener(observer));
   }
 
   /**
-   *
+   * Represents a PawnsBoardMouseListener that responds to mouse clicked events in the game board
+   * (PawnsBoardPanel class).
    */
   class PawnsBoardMouseListener extends MouseAdapter {
     private ViewActions observer;
+
+    /**
+     * Initializes a PawnsBoardMouseListener with an observer.
+     * @param observer the observer
+     */
     public PawnsBoardMouseListener(ViewActions observer) {
       this.observer = observer;
     }
 
     /**
-     *
-     * @param evt the event to be processed
+     * Responds to mouse clicked events in the game board. Converts the clicked physical coordinates
+     * to logical coordinates to model coordinates. Sets and highlights the selectedBoardCell to a
+     * point with the clicked model coordinates. Deselects the cell if the current selectedBoardCell
+     * is selected. After each mouse event, calls the observer to set the selected cell coordinates
+     * and redraws the game board.
+     * @param evt the mouse event to be processed
      */
     public void mouseClicked(MouseEvent evt) {
-      Point2D physical = evt.getPoint(); // coordinate of actual (x,y) of physical display in the panel
+      Point2D physical = evt.getPoint();
 
       if (model.isGameOver()) {
         return;
@@ -271,11 +294,11 @@ public class PawnsBoardPanel extends JPanel {
 
       try {
         // create objects to convert
-        AffineTransform physicalToLogical = getTransformForLogicalToPhysical(); // convert from physical to logical
-        physicalToLogical.invert(); // invert physical to logical
+        AffineTransform physicalToLogical = getTransformForLogicalToPhysical();
+        physicalToLogical.invert();
 
-        AffineTransform logicalToModel = getTransformForModelToLogical(); // convert from logical to model (cell row/col)
-        logicalToModel.invert(); // invert logical to model
+        AffineTransform logicalToModel = getTransformForModelToLogical();
+        logicalToModel.invert();
 
         // convert using objects to coordinates
         Point2D logical = physicalToLogical.transform(physical, null);

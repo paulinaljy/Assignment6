@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
+import cs3500.pawnsboard.strategy.ControlBoard;
 import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.strategy.MaxRowScore;
 import cs3500.pawnsboard.strategy.Move;
@@ -55,6 +57,7 @@ public class StrategyTest {
   private QueensBlood model;
   private FillFirst fillFirstStrategy;
   private MaxRowScore maxRowScoreStrategy;
+  private ControlBoard controlBoardStrategy;
 
   @Before
   public void setup() {
@@ -141,6 +144,7 @@ public class StrategyTest {
     model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
     fillFirstStrategy = new FillFirst();
     maxRowScoreStrategy = new MaxRowScore();
+    controlBoardStrategy = new ControlBoard();
   }
 
   // test for player 1 find first card that is placeable in first available cell (0,0)
@@ -318,13 +322,33 @@ public class StrategyTest {
     mockModel.placeCardInPosition(0, 0, 4);
     mockModel.pass();
 
+    // row 0 => move on
+    // row 1 => (1,4) h0 => cavestalker => move on
+    // (1,4) h1 => trooper => max row score
     Move move = maxRowScoreStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
-    assertEquals("(0,4) (0,3) (0,2) (0,2) (0,1) (0,0) (0,4) (0,3) (0,2) (0,1) (0,0) " +
-                    "(0,4) (0,3) (0,2) (0,1) (0,0) (0,4) (0,3) (0,2) (0,1) (0,0) (0,4) (0,3) (0,2) " +
-                    "(0,1) (0,0) (1,4)",
-            log.toString());
+    assertEquals("(1,4) ", log.toString());
   }
 
+  @Test
+  public void testMaxRowScoreFindMaxScoreCorrectly() {
+    StringBuilder log = new StringBuilder();
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    mockModel.startGame(p1Deck, p2Deck, 5, false);
+    mockModel.placeCardInPosition(0, 0, 0);
+    assertEquals(2, mockModel.getP1RowScore(0));
+    assertEquals(0, mockModel.getP2RowScore(0));
+    assertEquals(0, mockModel.getP1RowScore(1));
+    assertEquals(0, mockModel.getP2RowScore(1));
+
+    // P2 cards in row 0 = result in same score as P1
+    // move to row 1
+    Move move = maxRowScoreStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
+    mockModel.placeCardInPosition(move.getCardIdx(), move.getRow(), move.getCol());
+    assertEquals(0, mockModel.getP1RowScore(move.getRow()));
+    assertEquals(2, mockModel.getP2RowScore(move.getRow()));
+
+    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) ", log.toString());
+  }
 
   // test returning pass when no cards placed will give increase player 1 score
   @Test
@@ -358,5 +382,84 @@ public class StrategyTest {
 
     assertEquals(new Move(-1, -1, -1, true),
             maxRowScoreStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testControlBoardPlayer1() {
+    model.startGame(p1Deck, p2Deck, 5, true);
+
+    assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
+            model.getHand(model.getCurrentPlayerID())); // player 1's current hand
+
+    // (0,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+    // (0,1) (0,2) (0,3) (0,4)
+    // (1,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+    // (1,1) (1,2) (1,3) (1,4)
+    // (2,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+
+    assertEquals(new Move(3, 0, 0, false),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testControlBoardPlayer2() {
+    model.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(bee, sweeper, crab, mandragora,
+            trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber,
+            bee, sweeper, crab, mandragora, trooper, queen, lobber)), 5, false);
+    model.pass();
+    model.placeCardInPosition(3, 2, 4); // placed mandragora
+    model.pass();
+    model.drawNextCard();
+    assertEquals(Arrays.asList(bee, sweeper, crab, trooper, queen),
+            model.getHand(model.getCurrentPlayerID())); // player 2's current hand
+
+    // (0,4) bee, sweeper, crab, trooper, queen => max net influence 1 crab
+    // (0,3) (0,2) (0,1) (0,0)
+    // (1,4) bee, sweeper, crab, trooper, queen => max net influence 2 sweeper
+    // (1,3) (1,2) (1,1) (1,0)
+    // (2,4) => cannot place card
+
+    assertEquals(new Move(1, 1, 4, false),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
+  }
+
+  @Test
+  public void testControlBoardReadCorrectlyPlayer1() {
+    StringBuilder log = new StringBuilder();
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    mockModel.startGame(p1Deck, p2Deck, 5, true);
+
+    Move move = controlBoardStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
+    assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (1,0) (1,1) (1,2) (1,3) (1,4) (2,0) (2,1) " +
+            "(2,2) (2,3) (2,4) ", log.toString());
+  }
+
+  @Test
+  public void testControlBoardReadCorrectlyPlayer2() {
+    StringBuilder log = new StringBuilder();
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    mockModel.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(bee, sweeper, crab, mandragora,
+            trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber,
+            bee, sweeper, crab, mandragora, trooper, queen, lobber)), 5, true);
+
+    mockModel.pass();
+    mockModel.placeCardInPosition(3, 2, 4); // placed mandragora
+    mockModel.pass();
+    mockModel.drawNextCard();
+
+    Move move = controlBoardStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
+    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) (2,3) " +
+            "(2,2) (2,1) (2,0) ", log.toString());
+  }
+
+  @Test
+  public void testControlBoardPass() {
+    model.startGame(new ArrayList<GameCard>(Arrays.asList(bee, sweeper, queen, trooper,
+            cavestalker, lobber, bee, sweeper, queen, trooper, cavestalker, bee, sweeper, queen,
+            trooper, cavestalker)), p2Deck, 5, true);
+    // cards have no net influence / cost > 1 cannot be placed
+
+    assertEquals(new Move(-1, -1, -1, true),
+            controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
   }
 }

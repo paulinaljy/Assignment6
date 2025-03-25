@@ -19,6 +19,13 @@ public class PlayersHandPanel extends JPanel {
   private int playerID;
   private ViewActions observer;
 
+  /**
+   * Initializes a PlayersHandPanel with a read only pawns board model and player ID. Sets the
+   * layout of this players hand panel to be a 1x1 grid and creates and highlights the starting
+   * player's hand.
+   * @param pawnsBoardModel read only pawns board model
+   * @param playerID the current player's id
+   */
   public PlayersHandPanel(ReadonlyPawnsBoardModel pawnsBoardModel, int playerID) {
     super();
     this.playerID = playerID;
@@ -35,7 +42,7 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
+   * Creates and draws the current player's hand.
    */
   private void createHand() {
     this.playersHand = new ArrayList<GameCardButton>();
@@ -47,8 +54,9 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
-   * @param cardIdx
+   * Creates a new Game Card based on the given card index in the player's hand and adds it to the
+   * playersHand in this PlayersHandPanel.
+   * @param cardIdx card index in the player's hand (0-index)
    */
   private void createNewCard(int cardIdx) {
     GameCardButton cardButton = new GameCardButton(pawnsBoardModel, cardIdx, playerID);
@@ -57,7 +65,7 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
+   * Highlights the current player's turn by adding a yellow outline to this player's hand.
    */
   private void highlightTurn() {
     if (pawnsBoardModel.getCurrentPlayerID() == this.playerID) {
@@ -68,7 +76,8 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
+   * Refreshes this player's hand every turn by removing all cards and redrawing the new player's
+   * hand.
    */
   public void refreshHand() {
     this.removeAll();
@@ -84,15 +93,16 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
-   * @return
+   * Returns the selected card in this player's hand.
+   * @return GameCardButton that is currently selected
    */
   public GameCardButton getSelectedCard() {
     return selectedCard;
   }
 
   /**
-   *
+   * Adds a new mouse listener with the given observer to each game card in this player's hand
+   * panel.
    * @param observer
    */
   public void subscribe(ViewActions observer) {
@@ -105,17 +115,29 @@ public class PlayersHandPanel extends JPanel {
   }
 
   /**
-   *
+   * Represents a PlayersHandMouseListener that responds to mouse clicked events in this player's
+   * hand (PlayersHandPanel class).
    */
   class PlayersHandMouseListener extends MouseAdapter {
     private ViewActions observer;
     private GameCardButton cardButton;
 
+    /**
+     * Initializes the PlayersHandMouseListener with an observer and game card button.
+     * @param observer the observer
+     * @param cardButton the game card
+     */
     public PlayersHandMouseListener(ViewActions observer, GameCardButton cardButton) {
       this.observer = observer;
       this.cardButton = cardButton;
     }
 
+    /**
+     * Responds to mouse clicked events in the game board. Moves the card up if the card is
+     * selected, while deselecting and moving the previously selected card down. After each mouse
+     * event, calls the observer to set the card index selected in the players hand.
+     * @param evt the mouse event to be processed
+     */
     public void mouseClicked(MouseEvent evt) {
       if (pawnsBoardModel.isGameOver()) {
         return;
