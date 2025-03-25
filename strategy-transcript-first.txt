@@ -1,0 +1,20 @@
+First Legal Move
+
+Initial Board:
+- 3 × 5
+
+Player Hand:
+[Bee, Mandragora]
+
+process:
+
+1. Card: Bee
+   - Try placing Bee at (0,0): Valid
+   - Bee influences: (-2,0) and (2,0)
+     - (-2,0) is out of bounds
+     - (2,0) is valid and already contains a red pawn
+
+2. Select this move:
+   - Place Bee at (0,0)
+   - Remove Bee from hand
+   - Add 1 red pawn to (2,0)

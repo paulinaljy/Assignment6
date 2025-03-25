@@ -11,7 +11,10 @@ import javax.swing.*;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
-public class PlayersHandPanel extends JPanel {
+/**
+ * Panel representing players' hands.
+ */
+public class PlayersHandPanel extends JPanel  implements IntPlayersHandPanel {
 
   private GameCardButton selectedCard = null;
   private List<GameCardButton> playersHand;
@@ -40,7 +43,6 @@ public class PlayersHandPanel extends JPanel {
     createHand();
     highlightTurn();
   }
-
   /**
    * Creates and draws the current player's hand.
    */
@@ -79,6 +81,7 @@ public class PlayersHandPanel extends JPanel {
    * Refreshes this player's hand every turn by removing all cards and redrawing the new player's
    * hand.
    */
+  @Override
   public void refreshHand() {
     this.removeAll();
     this.playersHand.clear();
@@ -96,6 +99,8 @@ public class PlayersHandPanel extends JPanel {
    * Returns the selected card in this player's hand.
    * @return GameCardButton that is currently selected
    */
+
+  @Override
   public GameCardButton getSelectedCard() {
     return selectedCard;
   }
@@ -105,6 +110,8 @@ public class PlayersHandPanel extends JPanel {
    * panel.
    * @param observer
    */
+
+  @Override
   public void subscribe(ViewActions observer) {
     this.observer = observer;
     GameCardButton cardButton;

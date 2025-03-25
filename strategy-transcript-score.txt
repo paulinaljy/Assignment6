@@ -1,0 +1,25 @@
+MaxRowScore
+
+Initial Board:
+- 3 x 5
+
+Player Hand:
+[Bee, Mandragora]
+
+process:
+
+1. Sort cards by descending value: [Bee, Mandragora]
+2. Iterate over each row:
+
+   Row 1 (index 0):
+   - Red row score: 0
+   - Blue row score: 0
+   → Equal score, candidate for improvement
+
+   → Check columns left to right:
+
+   (0,0):
+     - Bee (value: 1, cost: 1):
+       - New Red score = 0 + 1 = 1
+       - Blue score = 0 → Valid
+

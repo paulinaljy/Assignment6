@@ -9,10 +9,6 @@ import java.awt.geom.Point2D;
 
 import javax.swing.*;
 
-import cs3500.pawnsboard.controller.PawnsBoardGUIController;
-import cs3500.pawnsboard.model.Cell;
-import cs3500.pawnsboard.model.GameCard;
-import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.model.ReadOnlyCell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
@@ -20,12 +16,14 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  * Represents a PawnsBoardPanel that has behaviors including drawing and updating the game board
  * (cells, game cards, pawns) after clicked mouse events.
  */
-public class PawnsBoardPanel extends JPanel {
+public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
+
   private final ReadonlyPawnsBoardModel model;
   private Point selectedBoardCell;
 
   /**
    * Initializes a PawnsBoardPanel with a read only pawns board model.
+   *
    * @param model the model of the game
    */
   public PawnsBoardPanel(ReadonlyPawnsBoardModel model) {
@@ -40,12 +38,13 @@ public class PawnsBoardPanel extends JPanel {
 
   /**
    * Draws the game board, including the cells with lines and score on each side of the board.
+   *
    * @param g the <code>Graphics</code> object to protect
    */
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    Graphics2D g2d = (Graphics2D)g.create();
+    Graphics2D g2d = (Graphics2D) g.create();
 
     int height = model.getHeight();
     int width = model.getWidth();
@@ -70,6 +69,7 @@ public class PawnsBoardPanel extends JPanel {
 
   /**
    * Returns a new logical dimension of 200 by 200 used to draw the game board.
+   *
    * @return logical dimension
    */
   private Dimension getLogicalDimensions() {
@@ -78,6 +78,7 @@ public class PawnsBoardPanel extends JPanel {
 
   /**
    * Converts model coordinates to logical based on the logical dimension.
+   *
    * @return AffineTransforms with converted model to logical coordinates
    */
   private AffineTransform getTransformForModelToLogical() {
@@ -89,6 +90,7 @@ public class PawnsBoardPanel extends JPanel {
 
   /**
    * Converst logical coordinates to physical based on the logical dimension.
+   *
    * @return AffineTransforms with converted logical to physical coordinates
    */
   private AffineTransform getTransformForLogicalToPhysical() {
@@ -101,9 +103,10 @@ public class PawnsBoardPanel extends JPanel {
   /**
    * Draws a line given the Graphics2D object, row start and end, col start and end. Converts
    * the given model row and col coordinates into logical coordinates.
-   * @param g2d Graphics2D object
-   * @param row start of line row (0-index)
-   * @param col start of line col (0-index)
+   *
+   * @param g2d    Graphics2D object
+   * @param row    start of line row (0-index)
+   * @param col    start of line col (0-index)
    * @param endRow end of line row (0-index)
    * @param endCol end of line col (0-index)
    */
@@ -112,17 +115,20 @@ public class PawnsBoardPanel extends JPanel {
     Point2D src = modelToLogical.transform(new Point(col, row), null);
     Point2D dst = modelToLogical.transform(new Point(endCol, endRow), null);
 
-    g2d.drawLine((int)src.getX(),
-            (int)src.getY(),
-            (int)dst.getX(),
-            (int)dst.getY());
+    g2d.drawLine((int) src.getX(),
+            (int) src.getY(),
+            (int) dst.getX(),
+            (int) dst.getY());
   }
 
   /**
    * Draws the game board based on the type of cells in the model. If the cell is an EmptyCell,
    * draws a cell with a gray background. If the cell is a Pawns, draws a cell with a gray
-   * background and circles with corresponding count of pawns and color of player. If the cell is
-   * a GameCard, draws a cell with the corresponding color of player and value of card.
+   * background and circles with corresponding count of pawns and color of player.
+   * <p>
+   * If the cell is a GameCard, draws a cell with the corresponding color of
+   * player and value of card.
+   *
    * @param g2d Graphics2D object
    */
   private void drawBoard(Graphics2D g2d) {
@@ -136,7 +142,7 @@ public class PawnsBoardPanel extends JPanel {
         }
 
         // empty or pawns cell = fill gray, game card = fill color
-        drawRect(g2d, row, col + 1,1, 1, backgroundColor);
+        drawRect(g2d, row, col + 1, 1, 1, backgroundColor);
 
         // pawns cell
         Color ownedColor = cell.getOwnedColor();
@@ -157,12 +163,13 @@ public class PawnsBoardPanel extends JPanel {
    * Draws a cell on the game board based on the given Graphics2D object, row, col, width, height,
    * and color. Converts the given model coordinates to logical and then draws a rectangle based
    * on that converted coordinates and given color.
-   * @param g2d Graphics2D object
-   * @param row model row index of the cell to be drawn (0-index)
-   * @param col model row index of the cell to be drawn (0-index)
-   * @param width width of the cell to be drawn
+   *
+   * @param g2d    Graphics2D object
+   * @param row    model row index of the cell to be drawn (0-index)
+   * @param col    model row index of the cell to be drawn (0-index)
+   * @param width  width of the cell to be drawn
    * @param height height of the cell to be drawn
-   * @param color color of the cell to be drawn
+   * @param color  color of the cell to be drawn
    */
   private void drawRect(Graphics2D g2d, int row, int col, int width, int height, Color color) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
@@ -170,19 +177,20 @@ public class PawnsBoardPanel extends JPanel {
     Point2D dst = modelToLogical.transform(new Point(width, height), null);
 
     g2d.setColor(color);
-    g2d.fillRect((int)src.getX(),
-            (int)src.getY(),
-            (int)dst.getX(),
-            (int)dst.getY());
+    g2d.fillRect((int) src.getX(),
+            (int) src.getY(),
+            (int) dst.getX(),
+            (int) dst.getY());
   }
 
   /**
    * Draws the pawns on the game board given the Graphics2D object, row, col, value, and color.
    * Converts the given model coordinates to logical and then draws ovals based on that converted
    * coordinates, given color, and given value (count of pawns).
-   * @param g2d Graphics2D object
-   * @param row model row index of the cell to be drawn (0-index)
-   * @param col model col index of the cell to be drawn (0-index)
+   *
+   * @param g2d   Graphics2D object
+   * @param row   model row index of the cell to be drawn (0-index)
+   * @param col   model col index of the cell to be drawn (0-index)
    * @param value the count of the pawns
    * @param color the color of the cell
    */
@@ -192,9 +200,9 @@ public class PawnsBoardPanel extends JPanel {
 
     g2d.setColor(color);
     int xOffSet = 5;
-    int yOffSet = 25 - (int)((model.getHeight() - 1) * 2.5);
+    int yOffSet = 25 - (int) ((model.getHeight() - 1) * 2.5);
     for (int i = 0; i < value; i++) {
-      g2d.fillOval((int)src.getX() + xOffSet,(int)src.getY() + yOffSet,5,10);
+      g2d.fillOval((int) src.getX() + xOffSet, (int) src.getY() + yOffSet, 5, 10);
       xOffSet += 6;
     }
   }
@@ -202,6 +210,7 @@ public class PawnsBoardPanel extends JPanel {
   /**
    * Draws the row score for each player next to each row on the board. Player 1's scores are drawn
    * to the left of the board, while Player 2's scores are drawn to the right of the board.
+   *
    * @param g2d Graphics2D object
    */
   private void drawScore(Graphics2D g2d) {
@@ -223,17 +232,18 @@ public class PawnsBoardPanel extends JPanel {
    * is a game card, draws the value on the given (row, col) cell coordinates on the board. If the
    * value is a score, draws the value on the given (row, col) cell coordinates on the side of the
    * board.
-   * @param g2d Graphics2D object
-   * @param row model row index of the cell to be drawn (0-index)
-   * @param col model col index of the cell to be drawn (0-index)
+   *
+   * @param g2d   Graphics2D object
+   * @param row   model row index of the cell to be drawn (0-index)
+   * @param col   model col index of the cell to be drawn (0-index)
    * @param value number value to be drawn
    */
   private void drawValue(Graphics2D g2d, int row, int col, int value) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
     Point2D src = modelToLogical.transform(new Point(col, row), null); // starting point
     Point2D dst = modelToLogical.transform(new Point(col + 1, row + 1), null); // starting point of next col
-    int x = ((int)src.getX() + (int)dst.getX()) / 2; // in between starting point and next col
-    int y = ((int)src.getY() + (int)dst.getY()) / 2;
+    int x = ((int) src.getX() + (int) dst.getX()) / 2; // in between starting point and next col
+    int y = ((int) src.getY() + (int) dst.getY()) / 2;
 
     g2d.setColor(Color.black);
     g2d.drawString(Integer.toString(value), x - 4, y);
@@ -241,8 +251,11 @@ public class PawnsBoardPanel extends JPanel {
 
   /**
    * Returns a point with the x and y positions of the selected cell on the board.
+   *
    * @return a point
    */
+
+  @Override
   public Point getSelectedBoardCell() {
     return selectedBoardCell;
   }
@@ -250,14 +263,18 @@ public class PawnsBoardPanel extends JPanel {
   /**
    * Resets the selected board cell to be null after a card is placed.
    */
+
+  @Override
   public void reset() {
     selectedBoardCell = null;
   }
 
   /**
    * Adds a new mouse listener with the given observer to this pawns board panel.
+   *
    * @param observer the observer
    */
+  @Override
   public void subscribe(ViewActions observer) {
     this.addMouseListener(new PawnsBoardMouseListener(observer));
   }
@@ -271,8 +288,8 @@ public class PawnsBoardPanel extends JPanel {
 
     /**
      * Initializes a PawnsBoardMouseListener with an observer.
-     * @param observer the observer
      */
+
     public PawnsBoardMouseListener(ViewActions observer) {
       this.observer = observer;
     }
@@ -283,6 +300,7 @@ public class PawnsBoardPanel extends JPanel {
      * point with the clicked model coordinates. Deselects the cell if the current selectedBoardCell
      * is selected. After each mouse event, calls the observer to set the selected cell coordinates
      * and redraws the game board.
+     *
      * @param evt the mouse event to be processed
      */
     public void mouseClicked(MouseEvent evt) {
@@ -305,14 +323,14 @@ public class PawnsBoardPanel extends JPanel {
         Point2D model = logicalToModel.transform(logical, null);
 
         // observer takes coordinates and performs action
-        if (selectedBoardCell != null && selectedBoardCell.getX() == (int)model.getX()
-                && selectedBoardCell.getY() == (int)model.getY()) {
+        if (selectedBoardCell != null && selectedBoardCell.getX() == (int) model.getX()
+                && selectedBoardCell.getY() == (int) model.getY()) {
           selectedBoardCell = null;
         } else {
-          if ((int)model.getX() > 0 && (int)model.getX() <= PawnsBoardPanel.this.model.getWidth() &&
-                  (int)model.getY() >= 0 && (int)model.getY() < PawnsBoardPanel.this.model.getHeight()) {
-            selectedBoardCell = new Point((int)model.getX(), (int)model.getY());
-            observer.setSelectedCell((int)selectedBoardCell.getY(), (int)selectedBoardCell.getX() - 1);
+          if ((int) model.getX() > 0 && (int) model.getX() <= PawnsBoardPanel.this.model.getWidth() &&
+                  (int) model.getY() >= 0 && (int) model.getY() < PawnsBoardPanel.this.model.getHeight()) {
+            selectedBoardCell = new Point((int) model.getX(), (int) model.getY());
+            observer.setSelectedCell((int) selectedBoardCell.getY(), (int) selectedBoardCell.getX() - 1);
           }
         }
         repaint();
@@ -322,4 +340,5 @@ public class PawnsBoardPanel extends JPanel {
       }
     }
   }
+
 }
