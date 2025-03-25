@@ -1,5 +1,7 @@
 package cs3500.pawnsboard.controller;
 
+import java.io.IOException;
+
 import javax.swing.*;
 
 import cs3500.pawnsboard.model.PawnsBoardModel;
@@ -15,6 +17,7 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
   private int cardIdx;
   private int row;
   private int col;
+  private Appendable transcript;
 
   public PawnsBoardGUIController(PawnsBoardModel model, PawnsBoardView view1, PawnsBoardView view2) {
     if (view1 == null) {
@@ -26,6 +29,7 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
     this.model = model;
     this.view1 = view1;
     this.view2 = view2;
+    this.transcript = System.out;
   }
 
   @Override
@@ -36,9 +40,17 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
     this.view2.makeVisible();
   }
 
+  private void addTranscript(String message) {
+    try {
+      transcript.append(message + "\n");
+    } catch (IOException e) {
+      // ignore exception
+    }
+  }
+
   @Override
   public void placeCard(int cardIdx, int row, int col) {
-    System.out.println(model.getCurrentPlayer() + " placed card");
+    addTranscript(model.getCurrentPlayer() + " placed card");
     model.placeCardInPosition(cardIdx, row, col);
     model.drawNextCard();
     view1.refresh();
@@ -50,13 +62,13 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
 
   @Override
   public void quit() {
-    System.out.println("Game quit");
+    addTranscript("Game quit");
     System.exit(0);
   }
 
   @Override
   public void pass() {
-    System.out.println(model.getCurrentPlayer() + " passed");
+    addTranscript(model.getCurrentPlayer() + " passed");
     model.pass();
     model.drawNextCard();
     view1.refresh();
@@ -69,14 +81,14 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
   @Override
   public void setCardIdx(int cardIdx) {
     this.cardIdx = cardIdx;
-    System.out.println(model.getCurrentPlayer() + "selected card " + cardIdx);
+    addTranscript("Player " + model.getCurrentPlayerID() + " selected card " + cardIdx);
   }
 
   @Override
   public void setSelectedCell(int row, int col) {
     this.row = row;
     this.col = col;
-    System.out.println("Cell (" + row + "," + col + ") selected");
+    addTranscript("Cell (" + row + "," + col + ") selected");
   }
 
   private void processGameOver() {

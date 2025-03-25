@@ -124,7 +124,7 @@ public class GameCard implements Cell, ReadOnlyGameCard {
    *
    * @param playersColor the color of the current player
    */
-  void setColor(Color playersColor) {
+  public void setColor(Color playersColor) {
     this.color = playersColor;
   }
 
@@ -133,7 +133,7 @@ public class GameCard implements Cell, ReadOnlyGameCard {
    *
    * @return list of positions
    */
-  List<Position> getPositions() {
+  public List<Position> getPositions() {
     return this.influenceGrid;
   }
 

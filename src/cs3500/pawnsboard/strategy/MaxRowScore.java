@@ -8,6 +8,7 @@ import java.util.List;
 import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.Player;
+import cs3500.pawnsboard.model.ReadOnlyCell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 import cs3500.pawnsboard.model.GameCard;
 
@@ -21,47 +22,47 @@ public class MaxRowScore implements Strategy {
     this.board = model.getBoard();
     this.player = player;
 
-    int id = 0;
-    int otherId = 0;
-    if (player.getColor().equals(Color.RED)) {
-      id = 1;
-      otherId = 2;
-    } else {
-      id = 2;
-      otherId = 1;
+    int currentPlayerID = 1; // player 1
+    int otherPlayerID = 2; // player 2
+    if (player.getColor().equals(Color.BLUE)) {
+      currentPlayerID = 2; // player 2
+      otherPlayerID = 1; // player 1
     }
 
-    List<GameCard> hand = new ArrayList<>(model.getHand(id));
-
-    //sort hand by order of card value - highest to lowest
-    hand.sort(Comparator.comparingInt(GameCard::getValue).reversed());
-
+    List<GameCard> hand = new ArrayList<>(model.getHand(currentPlayerID));
+    hand.sort(Comparator.comparingInt(GameCard::getValue).reversed()); // sort hand by order of card value - highest to lowest
 
     for (int row = 0; row < board.size(); row++) {
-      int score = (id == 1) ? model.getP1RowScore(row) : model.getP2RowScore(row);
-      int otherScore = (id == 1) ? model.getP2RowScore(row) : model.getP1RowScore(row);
-
-      if (score > otherScore) {
-        continue;
+      int score = (currentPlayerID == 1) ? model.getP1RowScore(row) : model.getP2RowScore(row);
+      int otherScore = (currentPlayerID == 1) ? model.getP2RowScore(row) : model.getP1RowScore(row);
+      if (score > otherScore) { // if current player row score > other player's row score
+        continue; // move to next row
       }
 
       for (int col = 0; col < board.get(row).size(); col++) {
-        if (!board.get(row).get(col).isCardPlaceable()) {
-          continue;
+        int newCol = col;
+        if (currentPlayerID == 2) {
+          newCol = model.getWidth() - 1 - col;
+        }
+        ReadOnlyCell cell = model.getCellAt(row, newCol);
+        if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor()))) { // if cell not placeable
+          continue; // move on to next cell
         }
 
         for (int h = 0; h < hand.size(); h++) {
-          GameCard card = hand.get(h);
-          int cardValue = card.getValue();
-
+          GameCard card = hand.get(h); // gets card in hand
+          int cardValue = card.getValue(); // gets value of card
+          int cardCost = card.getCost(); // gets cost of card
+          if (cell.getValue() < cardCost) {
+            continue; // move on to next card in hand
+          }
           if ((score + cardValue) > otherScore) {
-            int realHandIndex = model.getHand(id).indexOf(card);
-            return new Move(realHandIndex, col, row, false);
+            int realHandIndex = model.getHand(currentPlayerID).indexOf(card);
+            return new Move(realHandIndex, row, col, false);
           }
         }
       }
     }
-
     return new Move(-1, -1, -1, true);
   }
 }

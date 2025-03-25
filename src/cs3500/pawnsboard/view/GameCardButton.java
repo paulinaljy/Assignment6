@@ -34,10 +34,6 @@ public class GameCardButton extends JButton {
     add(cardPanel);
   }
 
-  public void updateCard() {
-    cardPanel.updateCard();
-  }
-
   public int getIndexID() {
     return cardIdx;
   }

@@ -6,6 +6,8 @@ import java.util.List;
  * Represents behaviors of a QueensBlood game.
  */
 public interface QueensBlood extends ReadonlyPawnsBoardModel {
+  Cell getCellAt(int row, int col);
+
   /**
    * Updates the player turn.
    *

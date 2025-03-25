@@ -19,6 +19,12 @@ public class GameCardPanel extends JPanel {
   private int cardIdx;
   private int playerID;
 
+  /**
+   * Initializes the GameCardPanel with a read only model, card index, and player ID.
+   * @param pawnsBoardModel read only model of the game
+   * @param cardIdx card index of this game card (0-index)
+   * @param playerID the corresponding ID of this game card
+   */
   public GameCardPanel(ReadonlyPawnsBoardModel pawnsBoardModel, int cardIdx, int playerID) {
     super();
     this.playerID = playerID;
@@ -55,41 +61,11 @@ public class GameCardPanel extends JPanel {
     setBorder(BorderFactory.createLineBorder(Color.black));
   }
 
-  public void updateCard() {
-    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
-    setBackground(pawnsBoardModel.getPlayerColor(playerID));
-    setOpaque(true);
-
-    name.setText(card.getName());
-    cost.setText("Cost: " + card.getCost());
-    value.setText("Value: " + card.getValue());
-
-    updateGrid();
-
-    revalidate();
-    repaint();
-  }
-
-  private void updateGrid() {
-    ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
-    int gridIdx = 0;
-    for (int row = 0; row < 5; row++) {
-      for (int col = 0; col < 5; col++) {
-        Component cell = this.influenceGrid.getComponent(gridIdx);
-        if (row == 2 && col == 2) {
-          cell.setBackground(Color.orange);
-        } else if (card.isCellInfluencedAt(row, col)) {
-          cell.setBackground(Color.CYAN);
-        } else {
-          cell.setBackground(Color.DARK_GRAY);
-        }
-
-        gridIdx++;
-      }
-    }
-    influenceGrid.revalidate();
-  }
-
+  /**
+   * Draws the influence grid of this game card. Sets the color of the center cell (2,2) of the
+   * influence grid to be orange. Sets the color of the influenced cells to be cyan. Sets the color
+   * of unaffected cells to be gray.
+   */
   private void drawGrid() {
     ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
     for (int row = 0; row < 5; row++) {

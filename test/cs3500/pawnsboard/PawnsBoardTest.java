@@ -225,7 +225,7 @@ public class PawnsBoardTest {
 
     // check player hand
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
-            queen)), game1.getHand());
+            queen)), game1.getHand(game1.getCurrentPlayerID()));
 
     // check cell has pawns
     assertTrue(game1.getCellAt(2, 0).isCardPlaceable());
@@ -244,7 +244,7 @@ public class PawnsBoardTest {
     // check updated player hand
     game1.pass();
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, queen)),
-            game1.getHand());
+            game1.getHand(game1.getCurrentPlayerID()));
 
     // check center cell changed - is not pawns but game card
     assertFalse(game1.getCellAt(2, 0).isCardPlaceable());
@@ -349,12 +349,12 @@ public class PawnsBoardTest {
   public void testDrawNextCard() {
     game1.startGame(p1Deck, p2Deck, 5, true);
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
-            queen)), game1.getHand());
+            queen)), game1.getHand(game1.getCurrentPlayerID()));
 
     game1.drawNextCard();
 
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
-            queen, security)), game1.getHand());
+            queen, security)), game1.getHand(game1.getCurrentPlayerID()));
   }
 
   @Test
@@ -376,11 +376,11 @@ public class PawnsBoardTest {
 
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
             queen, security, sweeper, crab, trooper, lobber, security, bee, crab, mandragora,
-            queen, trooper, cavestalker, lobber)), game1.getHand());
+            queen, trooper, cavestalker, lobber)), game1.getHand(game1.getCurrentPlayerID()));
     game1.drawNextCard();
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
             queen, security, sweeper, crab, trooper, lobber, security, bee, crab, mandragora,
-            queen, trooper, cavestalker, lobber)), game1.getHand());
+            queen, trooper, cavestalker, lobber)), game1.getHand(game1.getCurrentPlayerID()));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -483,14 +483,14 @@ public class PawnsBoardTest {
 
   @Test(expected = IllegalStateException.class)
   public void testGetHandGameNotStarted() {
-    game1.getHand();
+    game1.getHand(game1.getCurrentPlayerID());
   }
 
   @Test
   public void testGetHand() {
     game1.startGame(p1Deck, p2Deck, 5, true);
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
-            queen)), game1.getHand());
+            queen)), game1.getHand(game1.getCurrentPlayerID()));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -791,11 +791,11 @@ public class PawnsBoardTest {
   @Test
   public void testGameCardGetColor() {
     game1.startGame(p1Deck, p2Deck, 5, true);
-    assertEquals(Color.white, game1.getHand().get(1).getOwnedColor());
+    assertEquals(Color.white, game1.getHand(game1.getCurrentPlayerID()).get(1).getOwnedColor());
 
     game1.placeCardInPosition(1, 0, 0);
 
-    assertEquals(Color.red, game1.getHand().get(1).getOwnedColor());
+    assertEquals(Color.red, game1.getHand(game1.getCurrentPlayerID()).get(1).getOwnedColor());
   }
 
   @Test
@@ -813,7 +813,7 @@ public class PawnsBoardTest {
     game1.startGame(p1Deck, p2Deck, 5, true);
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee,
                     sweeper, mandragora, queen)),
-            game1.getHand());
+            game1.getHand(game1.getCurrentPlayerID()));
 
     game1.placeCardInPosition(1, 2, 0); // player 1 placed card
     game1.placeCardInPosition(2, 0, 4); // player 2 placed card

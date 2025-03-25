@@ -59,11 +59,13 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
           case KeyEvent.VK_ENTER: // confirm move
             Point selectedCell = boardPanel.getSelectedBoardCell();
-            observer.setSelectedCell((int)selectedCell.getY(), (int)selectedCell.getX() - 1);
-            int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
-            observer.setCardIdx(cardIdx);
-            observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX() - 1);
-            boardPanel.reset();
+            GameCardButton card = playersHandPanel.getSelectedCard();
+            if (selectedCell != null && card != null) {
+              int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
+              observer.setCardIdx(cardIdx);
+              observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX() - 1);
+              boardPanel.reset();
+            }
             break;
 
           case KeyEvent.VK_SPACE: // pass move

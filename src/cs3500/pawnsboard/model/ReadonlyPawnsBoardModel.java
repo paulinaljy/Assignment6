@@ -120,4 +120,6 @@ public interface ReadonlyPawnsBoardModel {
   int getPlayerTotalScore(int playerID);
 
   int getCurrentPlayerID();
+
+  Player getPlayerByColor(Color color);
 }
