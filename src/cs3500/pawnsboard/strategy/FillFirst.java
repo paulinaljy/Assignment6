@@ -1,6 +1,6 @@
 package cs3500.pawnsboard.strategy;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +13,6 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  * Represents a FillFirst strategy that finds the first card and location that can be played on.
  */
 public class FillFirst implements Strategy {
-  private List<ArrayList<Cell>> board;
-  private Player player;
 
   /**
    * Chooses the first valid move for the current player. Rows are visited from top-down. Cols are
@@ -28,8 +26,7 @@ public class FillFirst implements Strategy {
    */
   @Override
   public Move chooseMove(ReadonlyPawnsBoardModel model, Player player) {
-    this.board = model.getBoard();
-    this.player = player;
+    List<ArrayList<Cell>> board = model.getBoard();
 
     for (int h = 0; h < player.getHandSize(); h++) {
       for (int row = 0; row < board.size(); row++) {

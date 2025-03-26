@@ -18,7 +18,7 @@ public interface PawnsBoardView {
   /**
    * Adds the observer to any listeners so actions on the view are
    * delegated to the observer.
-   * @param observer
+   * @param observer observer
    */
   void subscribe(ViewActions observer);
 }

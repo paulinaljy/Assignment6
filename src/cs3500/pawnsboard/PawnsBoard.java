@@ -29,7 +29,7 @@ public class PawnsBoard {
     QueensBlood model = new PawnsBoardModel(5, 3, new Random(), deckConfig);
     QueensBloodTextualView view = new PawnsBoardTextualView(model);
     Appendable gameLog = new StringBuffer();
-    File File = null;
+    File file = null;
     String path = "Assignment5" + File.separator + "docs" + File.separator + "deck.config";
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));

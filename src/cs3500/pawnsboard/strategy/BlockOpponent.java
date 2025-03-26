@@ -1,6 +1,6 @@
 package cs3500.pawnsboard.strategy;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 
 import cs3500.pawnsboard.model.GameCard;
@@ -66,7 +66,8 @@ public class BlockOpponent implements Strategy {
    * @param player the current player
    * @return a Move with the card index, row, col, and boolean whether the player should pass
    */
-  private Move findInfluenceableCell(ReadonlyPawnsBoardModel model, int targetRow, int targetCol, Player player) {
+  private Move findInfluenceableCell(ReadonlyPawnsBoardModel model, int targetRow,
+                                     int targetCol, Player player) {
     for (int h = 0; h < player.getHand().size(); h++) {
       GameCard card = player.getHand().get(h);
       List<Position> influencedCells = card.getPositions();

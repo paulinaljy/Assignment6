@@ -3,7 +3,6 @@ package cs3500.pawnsboard.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 

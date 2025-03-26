@@ -1,7 +1,5 @@
 package cs3500.pawnsboard.controller;
 
-import cs3500.pawnsboard.model.PawnsBoardModel;
-
 /**
  * Represents a Controller for PawnsBoard: handle user moves by executing them using the model;
  * convey move outcomes to the user in some form.

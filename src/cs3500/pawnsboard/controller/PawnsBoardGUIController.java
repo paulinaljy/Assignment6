@@ -1,26 +1,36 @@
 package cs3500.pawnsboard.controller;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.view.GameOverFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
 
+/**
+ * GUI controller for the Pawns Board game,
+ * handling user interactions.
+ */
 public class PawnsBoardGUIController implements PawnsBoardController, ViewActions {
 
   private PawnsBoardModel model;
   private PawnsBoardView view1;
   private PawnsBoardView view2;
-  private int cardIdx;
-  private int row;
-  private int col;
   private Appendable transcript;
 
-  public PawnsBoardGUIController(PawnsBoardModel model, PawnsBoardView view1, PawnsBoardView view2) {
+  /**
+   * Constructs a GUI controller for the game.
+   *
+   * @param model model
+   * @param view1 player 1's GUI view
+   * @param view2 player 2's GUI view
+   * @throws IllegalArgumentException if model or view is null.
+   */
+  public PawnsBoardGUIController(PawnsBoardModel model,
+                                 PawnsBoardView view1, PawnsBoardView view2) {
     if (view1 == null) {
       throw new IllegalArgumentException("View cannot be null");
     }
@@ -90,14 +100,11 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
 
   @Override
   public void setCardIdx(int cardIdx) {
-    this.cardIdx = cardIdx;
     addTranscript("Player " + model.getCurrentPlayerID() + " selected card " + cardIdx);
   }
 
   @Override
   public void setSelectedCell(int row, int col) {
-    this.row = row;
-    this.col = col;
     addTranscript("Cell (" + row + "," + col + ") selected");
   }
 

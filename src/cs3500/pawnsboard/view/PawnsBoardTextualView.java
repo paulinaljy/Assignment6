@@ -2,7 +2,6 @@ package cs3500.pawnsboard.view;
 
 import java.io.IOException;
 
-import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.QueensBlood;
 import cs3500.pawnsboard.model.ReadOnlyCell;
 

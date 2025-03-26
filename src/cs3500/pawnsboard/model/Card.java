@@ -1,6 +1,6 @@
 package cs3500.pawnsboard.model;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Represents the mutable behaviors of a game card, including setting the card to a player's color

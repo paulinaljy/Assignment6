@@ -1,10 +1,13 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
 
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
@@ -13,13 +16,17 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  * winner and exiting the game.
  */
 public class GameOverFrame extends JFrame implements PawnsBoardView {
-  private final ReadonlyPawnsBoardModel pawnsBoardModel;
+
+  /**
+   * Constructs a game over frame given the model.
+   *
+   * @param pawnsBoardModel model
+   */
   public GameOverFrame(ReadonlyPawnsBoardModel pawnsBoardModel) {
     super("Game Over");
     if (pawnsBoardModel == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
-    this.pawnsBoardModel = pawnsBoardModel;
 
     setSize(125, 100);
     setLocation(600, 200);
@@ -50,9 +57,10 @@ public class GameOverFrame extends JFrame implements PawnsBoardView {
     setVisible(true);
     setFocusable(true);
   }
+
   @Override
   public void refresh() {
-
+    //refresh not needed
   }
 
   @Override

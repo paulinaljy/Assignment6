@@ -1,6 +1,6 @@
 package cs3500.pawnsboard;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -165,7 +165,8 @@ public class MockPawnsBoardModel implements QueensBlood {
   }
 
   @Override
-  public void startGame(List<GameCard> p1Deck, List<GameCard> p2Deck, int handSize, boolean shuffle) {
+  public void startGame(List<GameCard> p1Deck, List<GameCard> p2Deck,
+                        int handSize, boolean shuffle) {
     this.players[0] = new Player(Color.RED, p1Deck, handSize, rand, shuffle);
     // creates new player 2
     this.players[1] = new Player(Color.BLUE, p2Deck, handSize, rand, shuffle);

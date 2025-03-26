@@ -1,6 +1,7 @@
 package cs3500.pawnsboard.strategy;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
 import java.util.List;
 
 import cs3500.pawnsboard.model.GameCard;
@@ -61,7 +62,8 @@ public class ControlBoard implements Strategy {
       }
     }
     if (maxCount > 0) {
-      return new Move(maxCardIdx, (int)maxCellPosition.getX(), (int)maxCellPosition.getY(), false);
+      return new Move(maxCardIdx, (int)maxCellPosition.getX(),
+              (int)maxCellPosition.getY(), false);
     } else {
       return new Move(-1, -1, -1, true);
     }
@@ -77,7 +79,8 @@ public class ControlBoard implements Strategy {
    * @param currentPlayer the current player
    * @return value representing the net count of owned cells if the card was placed
    */
-  private int getNetCount(ReadonlyPawnsBoardModel model, List<Position> influencedCells, int row, int col, Player currentPlayer) {
+  private int getNetCount(ReadonlyPawnsBoardModel model, List<Position> influencedCells,
+                          int row, int col, Player currentPlayer) {
     int netCount = 0;
     for (int i = 0; i < influencedCells.size(); i++) {
       int rowPosition = influencedCells.get(i).getRowDelta() + row;

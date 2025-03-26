@@ -29,11 +29,6 @@ import static org.junit.Assert.assertTrue;
  * Represents examples and tests of the strategies.
  **/
 public class StrategyTest {
-  private Position leftSecurity;
-  private Position rightSecurity;
-  private Position topSecurity;
-  private Position bottomSecurity;
-  private ArrayList<Position> securityInfluenceGrid;
   private GameCard security;
   private GameCard bee;
   private GameCard sweeper;
@@ -45,24 +40,21 @@ public class StrategyTest {
   private GameCard lobber;
   private ArrayList<GameCard> p1Deck;
   private ArrayList<GameCard> p2Deck;
-  private DeckConfiguration deckConfig;
   private QueensBlood model;
   private FillFirst fillFirstStrategy;
   private MaxRowScore maxRowScoreStrategy;
   private ControlBoard controlBoardStrategy;
-  private ArrayList<Strategy> opponentStrategies3;
-  private ArrayList<Strategy> opponentStrategies2;
   private BlockOpponent blockOpponentStrategy;
   private BlockOpponent blockOpponentStrategy2;
 
   @Before
   public void setup() {
-    leftSecurity = new Position(0, -1); // (2,1)
-    rightSecurity = new Position(0, 1); // (2,3)
-    topSecurity = new Position(-1, 0); // (1,2)
-    bottomSecurity = new Position(1, 0); // (3,2)
-    securityInfluenceGrid = new ArrayList<Position>(Arrays.asList(topSecurity, leftSecurity,
-            rightSecurity, bottomSecurity));
+    Position leftSecurity = new Position(0, -1); // (2,1)
+    Position rightSecurity = new Position(0, 1); // (2,3)
+    Position topSecurity = new Position(-1, 0); // (1,2)
+    Position bottomSecurity = new Position(1, 0); // (3,2)
+    ArrayList<Position> securityInfluenceGrid = new ArrayList<Position>(Arrays.asList(topSecurity,
+            leftSecurity, rightSecurity, bottomSecurity));
 
     Position topMandragora = new Position(-1, 0); // (1,2)
     Position right1Mandragora = new Position(0, 1); // (2,3)
@@ -132,15 +124,16 @@ public class StrategyTest {
             trooper, cavestalker, lobber, security, bee, sweeper, crab, mandragora, queen,
             trooper, cavestalker, lobber));
 
-    deckConfig = new PawnsBoardDeckConfig();
+    DeckConfiguration deckConfig = new PawnsBoardDeckConfig();
     model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
     fillFirstStrategy = new FillFirst();
     maxRowScoreStrategy = new MaxRowScore();
     controlBoardStrategy = new ControlBoard();
-    opponentStrategies3 = new ArrayList<Strategy>(Arrays.asList(controlBoardStrategy,
-            maxRowScoreStrategy, fillFirstStrategy));
-    opponentStrategies2 = new ArrayList<Strategy>(Arrays.asList(fillFirstStrategy,
-            maxRowScoreStrategy));
+    ArrayList<Strategy> opponentStrategies3 =
+            new ArrayList<Strategy>(Arrays.asList(controlBoardStrategy,
+                    maxRowScoreStrategy, fillFirstStrategy));
+    ArrayList<Strategy> opponentStrategies2 =
+            new ArrayList<Strategy>(Arrays.asList(fillFirstStrategy, maxRowScoreStrategy));
     blockOpponentStrategy = new BlockOpponent(opponentStrategies3);
     blockOpponentStrategy2 = new BlockOpponent(opponentStrategies2);
   }
@@ -245,8 +238,8 @@ public class StrategyTest {
     mockModel.pass();
 
     Move move = fillFirstStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
-    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) " +
-            "(2,3) (2,2) (2,1) (2,0) (0,4) ", log.toString());
+    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) "
+            + "(2,3) (2,2) (2,1) (2,0) (0,4) ", log.toString());
   }
 
   @Test
@@ -313,7 +306,8 @@ public class StrategyTest {
   @Test
   public void testMaxRowScoreReadCorrectlyPlayer1() {
     StringBuilder log = new StringBuilder();
-    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
+            3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
     mockModel.pass();
     mockModel.placeCardInPosition(2, 0, 4); // player 2 placed mandragora, value 2
@@ -328,7 +322,8 @@ public class StrategyTest {
   @Test
   public void testMaxRowScoreReadCorrectlyPlayer2() {
     StringBuilder log = new StringBuilder();
-    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
+            3, new Random(6));
     mockModel.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(security, sweeper, trooper,
             cavestalker, lobber)), 5, false);
     mockModel.pass();
@@ -345,7 +340,8 @@ public class StrategyTest {
   @Test
   public void testMaxRowScoreFindMaxScoreCorrectly() {
     StringBuilder log = new StringBuilder();
-    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
+            3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, false);
     mockModel.placeCardInPosition(0, 0, 0);
     assertEquals(2, mockModel.getP1RowScore(0));
@@ -404,11 +400,14 @@ public class StrategyTest {
     assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
             model.getHand(model.getCurrentPlayerID())); // player 1's current hand
 
-    // (0,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+    // (0,0) cavestalker, bee, sweeper, mandragora, queen, security
+    // => max net influence 2 mandragora
     // (0,1) (0,2) (0,3) (0,4)
-    // (1,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+    // (1,0) cavestalker, bee, sweeper, mandragora, queen, security
+    // => max net influence 2 mandragora
     // (1,1) (1,2) (1,3) (1,4)
-    // (2,0) cavestalker, bee, sweeper, mandragora, queen, security => max net influence 2 mandragora
+    // (2,0) cavestalker, bee, sweeper, mandragora, queen, security
+    // => max net influence 2 mandragora
 
     assertEquals(new Move(3, 0, 0, false),
             controlBoardStrategy.chooseMove(model, model.getCurrentPlayer()));
@@ -439,21 +438,24 @@ public class StrategyTest {
   @Test
   public void testControlBoardReadCorrectlyPlayer1() {
     StringBuilder log = new StringBuilder();
-    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
+            3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
 
     Move move = controlBoardStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
-    assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (1,0) (1,1) (1,2) (1,3) (1,4) (2,0) (2,1) " +
-            "(2,2) (2,3) (2,4) ", log.toString());
+    assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (1,0) (1,1) (1,2) (1,3) (1,4) (2,0) (2,1) "
+            + "(2,2) (2,3) (2,4) ", log.toString());
   }
 
   @Test
   public void testControlBoardReadCorrectlyPlayer2() {
     StringBuilder log = new StringBuilder();
-    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
-    mockModel.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(bee, sweeper, crab, mandragora,
-            trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber,
-            bee, sweeper, crab, mandragora, trooper, queen, lobber)), 5, true);
+    MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
+            3, new Random(6));
+    mockModel.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(bee, sweeper, crab,
+            mandragora, trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen,
+            lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber)),
+            5, true);
 
     mockModel.pass();
     mockModel.placeCardInPosition(3, 2, 4); // placed mandragora
@@ -461,8 +463,8 @@ public class StrategyTest {
     mockModel.drawNextCard();
 
     Move move = controlBoardStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
-    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) (2,3) " +
-            "(2,2) (2,1) (2,0) ", log.toString());
+    assertEquals("(0,4) (0,3) (0,2) (0,1) (0,0) (1,4) (1,3) (1,2) (1,1) (1,0) (2,4) (2,3) "
+            + "(2,2) (2,1) (2,0) ", log.toString());
   }
 
   @Test

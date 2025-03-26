@@ -1,12 +1,14 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
@@ -149,11 +151,13 @@ public class PlayersHandPanel extends JPanel implements IntPlayersHandPanel {
         return;
       }
       if (selectedCard == card) { // if selected card that is already selected
-        selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // moves card down
+        // moves card down
+        selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
         selectedCard = null; // deselect card
       } else {
         if (selectedCard != null) { // if a card is already selected + select different card
-          selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10); // move originally selected card down
+          // move originally selected card down
+          selectedCard.setLocation(selectedCard.getX(), selectedCard.getY() + 10);
         }
 
         selectedCard = card; // set selected card to current card

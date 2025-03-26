@@ -1,13 +1,17 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import cs3500.pawnsboard.model.ReadOnlyCell;
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
@@ -124,8 +128,8 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
    * Draws the game board based on the type of cells in the model. If the cell is an EmptyCell,
    * draws a cell with a gray background. If the cell is a Pawns, draws a cell with a gray
    * background and circles with corresponding count of pawns and color of player.
-   * <p>
-   * If the cell is a GameCard, draws a cell with the corresponding color of
+   *
+   * <p>If the cell is a GameCard, draws a cell with the corresponding color of
    * player and value of card.
    *
    * @param g2d Graphics2D object
@@ -136,7 +140,8 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
         ReadOnlyCell cell = model.getCellAt(row, col);
         Color backgroundColor = cell.getCellColor();
 
-        if (selectedBoardCell != null && row == selectedBoardCell.getY() && (col + 1) == selectedBoardCell.getX()) {
+        if (selectedBoardCell != null && row == selectedBoardCell.getY() && (col + 1)
+                == selectedBoardCell.getX()) {
           backgroundColor = Color.cyan;
         }
 
@@ -195,13 +200,15 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
    */
   private void drawPawns(Graphics2D g2d, int row, int col, int value, Color color) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
-    Point2D src = modelToLogical.transform(new Point(col, row), null); // convert model to logical
+    // convert model to logical
+    Point2D src = modelToLogical.transform(new Point(col, row), null);
 
     g2d.setColor(color);
     int xOffSet = 5;
     int yOffSet = 25 - (int) ((model.getHeight() - 1) * 2.5);
     for (int i = 0; i < value; i++) {
-      g2d.fillOval((int) src.getX() + xOffSet, (int) src.getY() + yOffSet, 5, 10);
+      g2d.fillOval((int) src.getX() + xOffSet,
+              (int) src.getY() + yOffSet, 5, 10);
       xOffSet += 6;
     }
   }
@@ -240,7 +247,8 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
   private void drawValue(Graphics2D g2d, int row, int col, int value) {
     AffineTransform modelToLogical = getTransformForModelToLogical();
     Point2D src = modelToLogical.transform(new Point(col, row), null); // starting point
-    Point2D dst = modelToLogical.transform(new Point(col + 1, row + 1), null); // starting point of next col
+    // starting point of next col
+    Point2D dst = modelToLogical.transform(new Point(col + 1, row + 1), null);
     int x = ((int) src.getX() + (int) dst.getX()) / 2; // in between starting point and next col
     int y = ((int) src.getY() + (int) dst.getY()) / 2;
 
@@ -325,10 +333,12 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
                 && selectedBoardCell.getY() == (int) model.getY()) {
           selectedBoardCell = null;
         } else {
-          if ((int) model.getX() > 0 && (int) model.getX() <= PawnsBoardPanel.this.model.getWidth() &&
-                  (int) model.getY() >= 0 && (int) model.getY() < PawnsBoardPanel.this.model.getHeight()) {
+          if ((int) model.getX() > 0 && (int) model.getX() <= PawnsBoardPanel.this.model.getWidth()
+                  && (int) model.getY() >= 0
+                  && (int) model.getY() < PawnsBoardPanel.this.model.getHeight()) {
             selectedBoardCell = new Point((int) model.getX(), (int) model.getY());
-            observer.setSelectedCell((int) selectedBoardCell.getY(), (int) selectedBoardCell.getX() - 1);
+            observer.setSelectedCell((int) selectedBoardCell.getY(),
+                    (int) selectedBoardCell.getX() - 1);
           }
         }
         repaint();

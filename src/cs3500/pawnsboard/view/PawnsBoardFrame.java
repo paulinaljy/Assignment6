@@ -1,10 +1,12 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
@@ -96,10 +98,12 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
 
       @Override
       public void keyReleased(KeyEvent e) {
+        //nothing when key released
       }
 
       @Override
       public void keyTyped(KeyEvent e) {
+        //nothing when typed
       }
     });
   }

@@ -2,7 +2,6 @@ package cs3500.pawnsboard.strategy;
 
 import java.util.Objects;
 
-import cs3500.pawnsboard.model.Player;
 
 /**
  * Represents a Move with a card index, col, row, and boolean whether the player should pass.

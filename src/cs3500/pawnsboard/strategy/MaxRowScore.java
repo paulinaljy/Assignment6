@@ -16,8 +16,6 @@ import cs3500.pawnsboard.model.GameCard;
  * player to win a particular row by making their row-score higher than the opponent’s row-score.
  */
 public class MaxRowScore implements Strategy {
-  private List<ArrayList<Cell>> board;
-  private Player player;
 
   /**
    *  Chooses a move that will allow the current player to have a higher row score than their
@@ -34,8 +32,7 @@ public class MaxRowScore implements Strategy {
    */
   @Override
   public Move chooseMove(ReadonlyPawnsBoardModel model, Player player) {
-    this.board = model.getBoard();
-    this.player = player;
+    List<ArrayList<Cell>> board = model.getBoard();
 
     int currentPlayerID = 1; // player 1
     int otherPlayerID = 2; // player 2
@@ -45,7 +42,8 @@ public class MaxRowScore implements Strategy {
     }
 
     List<GameCard> hand = new ArrayList<>(model.getHand(currentPlayerID));
-    hand.sort(Comparator.comparingInt(GameCard::getValue).reversed()); // sort hand by order of card value - highest to lowest
+    // sort hand by order of card value - highest to lowest
+    hand.sort(Comparator.comparingInt(GameCard::getValue).reversed());
 
     for (int row = 0; row < board.size(); row++) {
       int score = (currentPlayerID == 1) ? model.getP1RowScore(row) : model.getP2RowScore(row);
@@ -60,7 +58,8 @@ public class MaxRowScore implements Strategy {
           newCol = model.getWidth() - 1 - col;
         }
         ReadOnlyCell cell = model.getCellAt(row, newCol);
-        if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor()))) { // if cell not placeable
+        // if cell not placeable
+        if (!cell.isCardPlaceable() || !(cell.getOwnedColor().equals(player.getColor()))) {
           continue; // move on to next cell
         }
 

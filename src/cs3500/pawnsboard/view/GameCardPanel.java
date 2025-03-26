@@ -1,6 +1,9 @@
 package cs3500.pawnsboard.view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -17,9 +20,6 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  */
 public class GameCardPanel extends JPanel {
   private final ReadonlyPawnsBoardModel pawnsBoardModel;
-  private final JLabel name;
-  private final JLabel cost;
-  private final JLabel value;
   private final JPanel influenceGrid;
   private final int cardIdx;
   private final int playerID;
@@ -48,9 +48,9 @@ public class GameCardPanel extends JPanel {
     cardInfo.setOpaque(false);
 
     ReadOnlyGameCard card = pawnsBoardModel.getHand(playerID).get(cardIdx);
-    name = new JLabel(card.getName());
-    cost = new JLabel("Cost: " + card.getCost());
-    value = new JLabel("Value: " + card.getValue());
+    JLabel name = new JLabel(card.getName());
+    JLabel cost = new JLabel("Cost: " + card.getCost());
+    JLabel value = new JLabel("Value: " + card.getValue());
 
     cardInfo.add(name);
     cardInfo.add(cost);

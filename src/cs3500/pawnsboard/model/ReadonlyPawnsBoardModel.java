@@ -1,6 +1,6 @@
 package cs3500.pawnsboard.model;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
