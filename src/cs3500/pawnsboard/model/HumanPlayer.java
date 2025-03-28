@@ -4,20 +4,26 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
+import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.strategy.Move;
+import cs3500.pawnsboard.view.ViewActions;
 
-public class HumanPlayer extends Player implements PlayerActions {
-  private Color color;
-  private List<GameCard> deck;
-  private int handSize;
-  private Random rand;
-  private boolean shuffle;
+public class HumanPlayer implements GamePlayer {
+  private ReadonlyPawnsBoardModel model;
+  private int player;
+  private ViewActions observer; // interface
 
-  public HumanPlayer(Color color, List<GameCard> deck, int handSize, Random rand, boolean shuffle) {
-    super(color, deck, handSize, rand, shuffle);
+  public HumanPlayer(ReadonlyPawnsBoardModel model, int player) {
+    this.model = model;
+    this.player = player;
   }
   @Override
-  public Move chooseMove(ReadonlyPawnsBoardModel model, Player player) {
-    return null;
+  public void chooseMove() {
+    return;
+  }
+
+  @Override
+  public boolean isHumanPlayer() {
+    return true;
   }
 }

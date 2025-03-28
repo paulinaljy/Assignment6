@@ -68,7 +68,10 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
        */
       @Override
       public void keyPressed(KeyEvent e) {
-        if ((pawnsBoardModel.getCurrentPlayerID() != playerID) || pawnsBoardModel.isGameOver()) {
+        /*if ((pawnsBoardModel.getCurrentPlayerID() != playerID) || pawnsBoardModel.isGameOver()) {
+          return;
+        }*/
+        if (!observer.isViewEnabled()) { // machine player
           return;
         }
         switch (e.getKeyCode()) {
@@ -80,9 +83,7 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
             Point selectedCell = boardPanel.getSelectedBoardCell();
             GameCardPanel card = playersHandPanel.getSelectedCard();
             if (selectedCell != null && card != null) {
-              int cardIdx = playersHandPanel.getSelectedCard().getIndexID();
-              observer.setCardIdx(cardIdx);
-              observer.placeCard(cardIdx, (int)selectedCell.getY(), (int)selectedCell.getX() - 1);
+              observer.placeCard();
               boardPanel.reset();
             }
             break;

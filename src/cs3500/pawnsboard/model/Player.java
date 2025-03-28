@@ -127,6 +127,8 @@ public class Player {
     return this.color.equals(that.color);
   }
 
+
+
   @Override
   public int hashCode() {
     return Objects.hash(color);

@@ -1,14 +1,16 @@
 package cs3500.pawnsboard.controller;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import cs3500.pawnsboard.model.GamePlayer;
 import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.view.GameOverFrame;
+import cs3500.pawnsboard.view.ItsYourTurnFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
 
@@ -16,41 +18,45 @@ import cs3500.pawnsboard.view.ViewActions;
  * GUI controller for the Pawns Board game,
  * handling user interactions.
  */
-public class PawnsBoardGUIController implements PawnsBoardController, ViewActions {
+public class PawnsBoardPlayerController implements PawnsBoardController, ViewActions, ModelActions {
 
   private PawnsBoardModel model;
-  private PawnsBoardView view1;
-  private PawnsBoardView view2;
+  private PawnsBoardView view;
+  private GamePlayer player;
   private Appendable transcript;
+  private int cardIdxSelected;
+  private Point cellSelected;
+  private boolean viewEnabled;
 
   /**
    * Constructs a GUI controller for the game.
    *
    * @param model model
-   * @param view1 player 1's GUI view
-   * @param view2 player 2's GUI view
+   * @param view player's GUI view
+   * @param player player
    * @throws IllegalArgumentException if model or view is null.
    */
-  public PawnsBoardGUIController(PawnsBoardModel model,
-                                 PawnsBoardView view1, PawnsBoardView view2) {
-    if (view1 == null) {
+  public PawnsBoardPlayerController(PawnsBoardModel model,
+                                    PawnsBoardView view, GamePlayer player, boolean viewEnabled) {
+    if (view == null) {
       throw new IllegalArgumentException("View cannot be null");
     }
     if (model == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
     this.model = model;
-    this.view1 = view1;
-    this.view2 = view2;
+    this.view = view;
     this.transcript = System.out;
+    this.viewEnabled = false;
+    this.player = player;
+    this.cellSelected = null;
+    this.cardIdxSelected = -1;
   }
 
   @Override
   public void playGame() {
-    this.view1.subscribe(this);
-    this.view1.makeVisible();
-    this.view2.subscribe(this);
-    this.view2.makeVisible();
+    this.view.subscribe(this);
+    this.view.makeVisible();
   }
 
   private void addTranscript(String message) {
@@ -67,14 +73,14 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
     if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
       currentPlayer = "Player 2";
     }
-    //addTranscript(currentPlayer + " placed card " + cardIdx);
-    //model.placeCardInPosition(cardIdx, row, col);
+    addTranscript(currentPlayer + " placed card " + cardIdxSelected);
+    model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
     model.drawNextCard();
-    view1.refresh();
-    view2.refresh();
+    view.refresh();
     if (model.isGameOver()) {
       processGameOver();
     }
+
   }
 
   @Override
@@ -96,18 +102,24 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
       return;
     }
     model.drawNextCard();
-    view1.refresh();
-    view2.refresh();
+    view.refresh();
   }
 
   @Override
   public void setCardIdx(int cardIdx) {
+    cardIdxSelected = cardIdx;
     addTranscript("Player " + model.getCurrentPlayerID() + " selected card " + cardIdx);
   }
 
   @Override
   public void setSelectedCell(int row, int col) {
+    cellSelected = new Point(row, col);
     addTranscript("Cell (" + row + "," + col + ") selected");
+  }
+
+  @Override
+  public boolean isViewEnabled() {
+    return viewEnabled;
   }
 
   private void processGameOver() {
@@ -117,4 +129,16 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
       gameOverFrame.setFocusable(true);
     }
   }
+
+  @Override
+  public void itsYourTurn() {
+    if (player.isHumanPlayer()) {
+      viewEnabled = true;
+      JFrame itsYourTurnFrame = new ItsYourTurnFrame(model);
+      itsYourTurnFrame.setVisible(true);
+      itsYourTurnFrame.setFocusable(true);
+    }
+    player.chooseMove();
+  }
 }
+
