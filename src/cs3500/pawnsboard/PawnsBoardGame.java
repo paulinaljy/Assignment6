@@ -36,6 +36,7 @@ public final class PawnsBoardGame {
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
+    model.startGame(p1Deck, p2Deck, 5, false);
 
     PawnsBoardFrame view1 = new PawnsBoardFrame(model, 1);
     PawnsBoardFrame view2 = new PawnsBoardFrame(model, 2);
@@ -46,7 +47,6 @@ public final class PawnsBoardGame {
     GamePlayer player2 = new HumanPlayer(model, 2);
     PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
     PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
-    model.startGame(p1Deck, p2Deck, 5, false);
     controller1.playGame();
     controller2.playGame();
   }
