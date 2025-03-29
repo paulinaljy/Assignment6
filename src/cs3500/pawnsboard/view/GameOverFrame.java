@@ -15,7 +15,7 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  * Represents a GameOverFrame with behaviors, including drawing the game over message with the
  * winner and exiting the game.
  */
-public class GameOverFrame extends JFrame implements PawnsBoardView {
+public class GameOverFrame extends JFrame{
 
   /**
    * Constructs a game over frame given the model.
@@ -56,20 +56,5 @@ public class GameOverFrame extends JFrame implements PawnsBoardView {
     this.getContentPane().add(okButton);
     setVisible(true);
     setFocusable(true);
-  }
-
-  @Override
-  public void refresh() {
-    //refresh not needed
-  }
-
-  @Override
-  public void makeVisible() {
-    setVisible(true);
-  }
-
-  @Override
-  public void subscribe(ViewActions observer) {
-    observer.quit();
   }
 }

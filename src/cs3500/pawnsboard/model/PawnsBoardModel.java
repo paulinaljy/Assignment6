@@ -139,26 +139,26 @@ public class PawnsBoardModel implements QueensBlood {
     Player currentPlayer = this.getCurrentPlayer();
 
     if (cardIdx < 0 || cardIdx >= currentPlayer.getHandSize()) {
-      throw new IllegalArgumentException("Card index is out of bounds");
+      throw new IllegalArgumentException("Selected ard index is out of bounds.");
     }
     if (row < 0 || row >= this.height) {
-      throw new IllegalArgumentException("Row is out of bounds");
+      throw new IllegalArgumentException("Selected row is out of bounds.");
     }
     if (col < 0 || col >= this.width) {
-      throw new IllegalArgumentException("Column is out of bounds");
+      throw new IllegalArgumentException("Selected column is out of bounds.");
     }
     Cell centerCell = board.get(row).get(col);
     // if there are no pawns (empty cell or game card)
     if (!centerCell.isCardPlaceable()) {
-      throw new IllegalStateException("Cannot add card to this position");
+      throw new IllegalStateException("You have no pawns on this cell. Cannot add card.");
     }
     // if the given card and position does not contain the same color pawn as the player
     if (!(centerCell.getOwnedColor().equals(currentPlayer.getColor()))) {
-      throw new IllegalStateException("Does not own same colored pawns");
+      throw new IllegalStateException("You do not own these pawns.");
     }
     // if the player does not have enough pawns to cover the cost of the card
     if (centerCell.getValue() < currentPlayer.getCard(cardIdx).getCost()) {
-      throw new IllegalStateException("Does not have enough pawns to cover the cost of the card");
+      throw new IllegalStateException("You do not have enough pawns to cover the cost of this card.");
     }
 
     GameCard card = currentPlayer.removeCard(cardIdx); // removes card from player's hand

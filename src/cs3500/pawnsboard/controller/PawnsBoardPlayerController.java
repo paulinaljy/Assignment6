@@ -3,14 +3,12 @@ package cs3500.pawnsboard.controller;
 import java.awt.*;
 import java.io.IOException;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import cs3500.pawnsboard.model.GamePlayer;
 import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.PawnsBoardModel;
-import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.view.GameOverFrame;
-import cs3500.pawnsboard.view.ItsYourTurnFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
 
@@ -36,13 +34,15 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
    * @param player player
    * @throws IllegalArgumentException if model or view is null.
    */
-  public PawnsBoardPlayerController(PawnsBoardModel model,
-                                    PawnsBoardView view, GamePlayer player, boolean viewEnabled) {
+  public PawnsBoardPlayerController(PawnsBoardModel model, GamePlayer player, PawnsBoardView view) {
     if (view == null) {
       throw new IllegalArgumentException("View cannot be null");
     }
     if (model == null) {
       throw new IllegalArgumentException("Model cannot be null");
+    }
+    if (player == null) {
+      throw new IllegalArgumentException("GamePlayer cannot be null");
     }
     this.model = model;
     this.view = view;
@@ -73,10 +73,26 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
       currentPlayer = "Player 2";
     }
-    addTranscript(currentPlayer + " placed card " + cardIdxSelected);
-    model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
-    model.drawNextCard();
-    view.refresh();
+    if (cardIdxSelected == -1) {
+      JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
+                      "select a card from hand first", "Message", JOptionPane.INFORMATION_MESSAGE);
+    }
+    if (cellSelected == null) {
+      JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
+              "select a cell on the board first", "Message", JOptionPane.INFORMATION_MESSAGE);
+    }
+    try {
+      addTranscript(currentPlayer + " placed card " + cardIdxSelected);
+      model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
+      model.drawNextCard();
+      view.refresh();
+      cardIdxSelected = -1;
+      cellSelected = null;
+    } catch (IllegalArgumentException | IllegalStateException e) {
+      JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
+              + "Please play again.",
+              "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+    }
     if (model.isGameOver()) {
       processGameOver();
     }
@@ -96,7 +112,15 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       currentPlayer = "Player 2";
     }
     addTranscript(currentPlayer + " passed");
-    model.pass();
+    try {
+      model.pass();
+      cardIdxSelected = -1;
+      cellSelected = null;
+    } catch (IllegalStateException e) {
+      JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
+                      + "Please play again.", "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     if (model.isGameOver()) {
       processGameOver();
       return;
@@ -134,9 +158,12 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
   public void itsYourTurn() {
     if (player.isHumanPlayer()) {
       viewEnabled = true;
-      JFrame itsYourTurnFrame = new ItsYourTurnFrame(model);
-      itsYourTurnFrame.setVisible(true);
-      itsYourTurnFrame.setFocusable(true);
+      String currentPlayer = "Player RED";
+      if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
+        currentPlayer = "Player BLUE";
+      }
+      JOptionPane.showMessageDialog(null, currentPlayer + ": It's your turn!",
+              "It's Your Turn!", JOptionPane.INFORMATION_MESSAGE);
     }
     player.chooseMove();
   }

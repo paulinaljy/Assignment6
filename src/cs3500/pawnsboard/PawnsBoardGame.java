@@ -3,13 +3,17 @@ package cs3500.pawnsboard;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Random;
 
 import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.controller.DeckConfiguration;
+import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
+import cs3500.pawnsboard.model.GamePlayer;
+import cs3500.pawnsboard.model.HumanPlayer;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
 
@@ -32,14 +36,18 @@ public final class PawnsBoardGame {
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
-    model.startGame(p1Deck, p2Deck, 5, false);
 
     PawnsBoardFrame view1 = new PawnsBoardFrame(model, 1);
     PawnsBoardFrame view2 = new PawnsBoardFrame(model, 2);
     view2.setLocation(view1.getX() + view1.getWidth(), view1.getY());
     view1.setVisible(true);
     view2.setVisible(true);
-    PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view1, view2);
-    controller.playGame();
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    controller1.playGame();
+    controller2.playGame();
   }
 }

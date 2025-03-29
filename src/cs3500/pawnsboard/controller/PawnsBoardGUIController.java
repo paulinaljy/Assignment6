@@ -110,6 +110,11 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
     addTranscript("Cell (" + row + "," + col + ") selected");
   }
 
+  @Override
+  public boolean isViewEnabled() {
+    return false;
+  }
+
   private void processGameOver() {
     if (model.isGameOver()) {
       JFrame gameOverFrame = new GameOverFrame(model);
