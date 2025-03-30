@@ -8,11 +8,8 @@ public interface ViewActions {
 
   /**
    * Places the card on the game board given the card index, row, and column.
-   * @param cardIdx card index of the card in the player's hand (0-index)
-   * @param row row of the cell to be placed in (0-index)
-   * @param col col of the cell to be placed in (0-index)
    */
-  void placeCard(int cardIdx, int row, int col);
+  void placeCard();
 
   /**
    * Quits the game.
@@ -36,6 +33,8 @@ public interface ViewActions {
    * @param col col of the selected cell (0-index)
    */
   void setSelectedCell(int row, int col);
+
+  boolean isViewEnabled();
 
 }
 
