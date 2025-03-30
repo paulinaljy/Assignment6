@@ -42,6 +42,10 @@ public class GameOverFrame extends JFrame implements PawnsBoardView {
     }
     JLabel winnerLabel = new JLabel(winner);
 
+    //getting winner's score:
+    int score = pawnsBoardModel.getWinningScore();
+    JLabel winScoreLabel = new JLabel("Winning Score: " + score);
+
     JButton okButton = new JButton("OK");
     okButton.addMouseListener(new MouseAdapter() {
       @Override
@@ -53,6 +57,7 @@ public class GameOverFrame extends JFrame implements PawnsBoardView {
     setLayout(new FlowLayout());
     this.getContentPane().add(gameOverLabel);
     this.getContentPane().add(winnerLabel);
+    this.getContentPane().add(winScoreLabel);
     this.getContentPane().add(okButton);
     setVisible(true);
     setFocusable(true);
