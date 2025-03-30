@@ -14,7 +14,9 @@ import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.model.GamePlayer;
 import cs3500.pawnsboard.model.HumanPlayer;
+import cs3500.pawnsboard.model.MachinePlayer;
 import cs3500.pawnsboard.model.PawnsBoardModel;
+import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
 
 /**
@@ -36,8 +38,8 @@ public final class PawnsBoardGame {
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));
     List<GameCard> p2Deck = deckConfig.loadDeckConfig(new FileReader(config));
-    model.startGame(p1Deck, p2Deck, 5, false);
 
+    model.startGame(p1Deck, p2Deck, 5, false);
     PawnsBoardFrame view1 = new PawnsBoardFrame(model, 1);
     PawnsBoardFrame view2 = new PawnsBoardFrame(model, 2);
     view2.setLocation(view1.getX() + view1.getWidth(), view1.getY());
@@ -45,9 +47,11 @@ public final class PawnsBoardGame {
     view2.setVisible(true);
     GamePlayer player1 = new HumanPlayer(model, 1);
     GamePlayer player2 = new HumanPlayer(model, 2);
+    //GamePlayer player2 = new MachinePlayer(model, new FillFirst(),2);
     PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
     PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
     controller1.playGame();
     controller2.playGame();
+    controller1.itsYourTurn();
   }
 }

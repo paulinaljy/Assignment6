@@ -10,12 +10,11 @@ import cs3500.pawnsboard.view.ViewActions;
 
 public class HumanPlayer implements GamePlayer {
   private ReadonlyPawnsBoardModel model;
-  private int player;
-  private ViewActions observer; // interface
+  private int playerID;
 
-  public HumanPlayer(ReadonlyPawnsBoardModel model, int player) {
+  public HumanPlayer(ReadonlyPawnsBoardModel model, int playerID) {
     this.model = model;
-    this.player = player;
+    this.playerID = playerID;
   }
   @Override
   public void chooseMove() {
@@ -25,5 +24,20 @@ public class HumanPlayer implements GamePlayer {
   @Override
   public boolean isHumanPlayer() {
     return true;
+  }
+
+  @Override
+  public int getPlayerID() {
+    return playerID;
+  }
+
+  @Override
+  public void subscribe(ViewActions observer) {
+
+  }
+
+  @Override
+  public String toString() {
+    return "Player " + playerID;
   }
 }

@@ -2,6 +2,8 @@ package cs3500.pawnsboard.model;
 
 import java.util.List;
 
+import cs3500.pawnsboard.view.ViewActions;
+
 /**
  * Represents the mutable behaviors of a QueensBlood game, including setting the next player,
  * placing a card, passing, drawing the next card, and starting the game.
@@ -63,4 +65,10 @@ public interface QueensBlood extends ReadonlyPawnsBoardModel {
    */
   void startGame(List<GameCard> p1Deck, List<GameCard> p2Deck, int handSize, boolean shuffle);
 
+  /**
+   * Adds the observer to any listeners so actions on the view are
+   * delegated to the observer.
+   * @param observer observer
+   */
+  void subscribe(ModelActions observer, int playerID);
 }

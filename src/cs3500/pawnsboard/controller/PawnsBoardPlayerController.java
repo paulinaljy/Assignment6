@@ -17,7 +17,6 @@ import cs3500.pawnsboard.view.ViewActions;
  * handling user interactions.
  */
 public class PawnsBoardPlayerController implements PawnsBoardController, ViewActions, ModelActions {
-
   private PawnsBoardModel model;
   private PawnsBoardView view;
   private GamePlayer player;
@@ -55,7 +54,9 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
 
   @Override
   public void playGame() {
-    this.view.subscribe(this);
+    this.view.subscribe(this); // view subscribed to controller
+    this.model.subscribe(this, player.getPlayerID()); // model subscribed to controller
+    this.player.subscribe(this); // player (machine) subscribed to controller
     this.view.makeVisible();
   }
 
@@ -69,10 +70,7 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
 
   @Override
   public void placeCard() {
-    String currentPlayer = "Player 1";
-    if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
-      currentPlayer = "Player 2";
-    }
+    String currentPlayer = this.player.toString();
     if (cardIdxSelected == -1) {
       JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
                       "select a card from hand first", "Message", JOptionPane.INFORMATION_MESSAGE);
@@ -84,7 +82,6 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     try {
       addTranscript(currentPlayer + " placed card " + cardIdxSelected);
       model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
-      model.drawNextCard();
       view.refresh();
       cardIdxSelected = -1;
       cellSelected = null;
@@ -96,7 +93,6 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     if (model.isGameOver()) {
       processGameOver();
     }
-
   }
 
   @Override
@@ -107,10 +103,7 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
 
   @Override
   public void pass() {
-    String currentPlayer = "Player 1";
-    if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
-      currentPlayer = "Player 2";
-    }
+    String currentPlayer = this.player.toString();
     addTranscript(currentPlayer + " passed");
     try {
       model.pass();
@@ -159,13 +152,19 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     if (player.isHumanPlayer()) {
       viewEnabled = true;
       String currentPlayer = "Player RED";
-      if (model.getCurrentPlayer().getColor().equals(Color.blue)) {
+      if (player.getPlayerID() == 2) {
         currentPlayer = "Player BLUE";
       }
+      System.out.println(currentPlayer);
       JOptionPane.showMessageDialog(null, currentPlayer + ": It's your turn!",
               "It's Your Turn!", JOptionPane.INFORMATION_MESSAGE);
     }
     player.chooseMove();
+  }
+
+  @Override
+  public void refreshView() {
+    view.refresh();
   }
 }
 

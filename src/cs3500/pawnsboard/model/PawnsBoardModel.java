@@ -42,6 +42,8 @@ public class PawnsBoardModel implements QueensBlood {
   private final Random rand;
   private int p1TotalScore;
   private int p2TotalScore;
+  private ModelActions observer1;
+  private ModelActions observer2;
 
   /**
    * Initializes a PawnsBoardModel with width, height, and random object.
@@ -78,7 +80,21 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void setNextPlayer() {
     this.isGameStarted();
+    observer1.refreshView();
+    observer2.refreshView();
     this.turn = (turn + 1) % 2;
+    if (this.turn == 0) {
+      if (observer1 != null) {
+        observer1.itsYourTurn();
+      }
+    } else {
+      if (observer2 != null) {
+        observer2.itsYourTurn();
+      }
+    }
+    this.drawNextCard();
+    observer1.refreshView();
+    observer2.refreshView();
   }
 
   /**
@@ -272,6 +288,15 @@ public class PawnsBoardModel implements QueensBlood {
   }
 
   @Override
+  public void subscribe(ModelActions observer, int playerID) {
+    if (playerID == 1) {
+      this.observer1 = observer;
+    } else {
+      this.observer2 = observer;
+    }
+  }
+
+  @Override
   public int getWidth() {
     return this.width;
   }
@@ -370,7 +395,6 @@ public class PawnsBoardModel implements QueensBlood {
 
   @Override
   public List<GameCard> getHand(int playerID) {
-    this.isGameStarted();
     return players[playerID - 1].getHand();
   }
 

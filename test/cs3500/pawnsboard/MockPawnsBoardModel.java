@@ -8,6 +8,7 @@ import java.util.Random;
 import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
@@ -172,6 +173,11 @@ public class MockPawnsBoardModel implements QueensBlood {
     this.players[1] = new Player(Color.BLUE, p2Deck, handSize, rand, shuffle);
     //this.pass = 0;
     this.drawNextCard();
+  }
+
+  @Override
+  public void subscribe(ModelActions observer, int playerID) {
+
   }
 
   @Override

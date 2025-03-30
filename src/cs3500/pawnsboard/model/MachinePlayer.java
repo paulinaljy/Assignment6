@@ -37,4 +37,14 @@ public class MachinePlayer implements GamePlayer {
   public boolean isHumanPlayer() {
     return false;
   }
+
+  @Override
+  public int getPlayerID() {
+    return playerID;
+  }
+
+  @Override
+  public void subscribe(ViewActions observer) {
+    this.observer = observer;
+  }
 }
