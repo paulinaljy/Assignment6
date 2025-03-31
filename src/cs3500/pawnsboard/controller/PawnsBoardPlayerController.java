@@ -151,6 +151,7 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
   public void itsYourTurn() {
     if (player.isHumanPlayer()) {
       viewEnabled = true;
+      view.refresh(); //mar30
       String currentPlayer = "Player RED";
       if (player.getPlayerID() == 2) {
         currentPlayer = "Player BLUE";
