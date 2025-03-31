@@ -143,7 +143,7 @@ public class PlayersHandPanel extends JPanel implements IntPlayersHandPanel {
     /**
      * Responds to mouse clicked events in the game board. Moves the card up if the card is
      * selected, while deselecting and moving the previously selected card down. After each mouse
-     * event, calls the observer to set the card index selected in the players hand.
+     * event, notifies the observer (controller) to set the card index selected in the players hand.
      * @param evt the mouse event to be processed
      */
     public void mouseClicked(MouseEvent evt) {

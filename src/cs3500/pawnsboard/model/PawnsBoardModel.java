@@ -75,7 +75,10 @@ public class PawnsBoardModel implements QueensBlood {
   }
 
   /**
-   * If turn is 0, return Player 1. If turn is 1, return Player 2.
+   * Sets the next player. After updating turn, draws the next card for the next player and then
+   * notifies the observer (view) to refresh both players' view. If turn = 0 and observer is not null,
+   * notifies observer1 (player 1) that it's their turn. If turn = 1 and observer is not null,
+   * notifies observer2 (player 2) that it's their turn.
    */
   @Override
   public void setNextPlayer() {
@@ -181,7 +184,6 @@ public class PawnsBoardModel implements QueensBlood {
     card.setColor(currentPlayer.getColor());
     this.applyInfluenceCells(card, row, col, currentPlayer); // influence effect
     pass = 0; // sets pass to 0
-    //currentPlayer.drawNextCard(0); //drawing next card mar30
     this.setNextPlayer();
   }
 
@@ -234,7 +236,6 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void pass() {
     this.isGameStarted();
-    //getCurrentPlayer().drawNextCard(0); //draw next card mar30
     this.setNextPlayer();
     pass = pass + 1;
   }
@@ -287,6 +288,12 @@ public class PawnsBoardModel implements QueensBlood {
     this.drawNextCard();
   }
 
+  /**
+   * If the given playerID is 1, subscribes observer1 (player 1) to the given observer. If the given
+   * playerID is 2, subscribes observer2 (player 2) to the given observer.
+   * @param observer model actions observer
+   * @param playerID corresponding player ID
+   */
   @Override
   public void subscribe(ModelActions observer, int playerID) {
     if (playerID == 1) {

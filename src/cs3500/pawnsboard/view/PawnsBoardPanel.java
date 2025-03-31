@@ -304,8 +304,8 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
      * Responds to mouse clicked events in the game board. Converts the clicked physical coordinates
      * to logical coordinates to model coordinates. Sets and highlights the selectedBoardCell to a
      * point with the clicked model coordinates. Deselects the cell if the current selectedBoardCell
-     * is selected. After each mouse event, calls the observer to set the selected cell coordinates
-     * and redraws the game board.
+     * is selected. After each mouse event, notifies the observer (controller) to set the selected
+     * cell coordinates and redraws the game board.
      *
      * @param evt the mouse event to be processed
      */
@@ -313,6 +313,7 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
       Point2D physical = evt.getPoint();
 
       if (model.isGameOver() || !observer.isViewEnabled()) {
+        System.out.println("not your turn");
         return;
       }
 

@@ -2,7 +2,8 @@ package cs3500.pawnsboard.view;
 
 /**
  * Represents a ViewActions interface that make up the game play actions of the game, including
- * placing a card, quitting, passing, setting a card index, and setting a selected cell.
+ * placing a card, quitting, passing, setting a card index, setting a selected cell, and checking
+ * whether the view should be playable.
  */
 public interface ViewActions {
 
@@ -34,6 +35,10 @@ public interface ViewActions {
    */
   void setSelectedCell(int row, int col);
 
+  /**
+   * Returns whether the view should be playable (cells and cards clickable).
+   * @return boolean whether the view should be playable
+   */
   boolean isViewEnabled();
 
 }

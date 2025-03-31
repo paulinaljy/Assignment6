@@ -46,8 +46,8 @@ public final class PawnsBoardGame {
     view1.setVisible(true);
     view2.setVisible(true);
     GamePlayer player1 = new HumanPlayer(model, 1);
-    GamePlayer player2 = new HumanPlayer(model, 2);
-    //GamePlayer player2 = new MachinePlayer(model, new FillFirst(),2);
+    //GamePlayer player2 = new HumanPlayer(model, 2);
+    GamePlayer player2 = new MachinePlayer(model, new FillFirst(),2);
     PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
     PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
     controller1.playGame();

@@ -8,6 +8,9 @@ import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.strategy.Move;
 import cs3500.pawnsboard.view.ViewActions;
 
+/**
+ * Represents a HumanPlayer in the PawnsBoard game.
+ */
 public class HumanPlayer implements GamePlayer {
   private ReadonlyPawnsBoardModel model;
   private int playerID;

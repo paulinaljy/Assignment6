@@ -61,14 +61,16 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
     this.playersHandPanel.subscribe(observer);
     this.addKeyListener(new KeyListener() {
       /**
-       * If the key "q" is pressed, quits the game. If the enter key is pressed, confirms the
-       * move and places the selected card in the selected board cell. If the space key is pressed,
-       * passes to next player.
+       * If the key "q" is pressed, notifies the observer (PawnsBoardPlayerController) to quit the
+       * game. If the enter key is pressed, notifies the observer (PawnsBoardPlayerController) to
+       * place the selected card in the selected board cell. If the space key is pressed, notifies
+       * the observer (PawnsBoardPlayerController) to pass.
        * @param e the event to be processed
        */
       @Override
       public void keyPressed(KeyEvent e) {
         if (!observer.isViewEnabled()) { // machine player
+          System.out.println("machine player");
           return;
         }
         switch (e.getKeyCode()) {

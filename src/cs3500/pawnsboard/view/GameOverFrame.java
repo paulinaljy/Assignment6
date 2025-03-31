@@ -13,7 +13,7 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
 /**
  * Represents a GameOverFrame with behaviors, including drawing the game over message with the
- * winner and exiting the game.
+ * winner and winning score and exiting the game.
  */
 public class GameOverFrame extends JFrame{
 

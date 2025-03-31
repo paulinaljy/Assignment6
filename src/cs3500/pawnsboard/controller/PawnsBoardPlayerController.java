@@ -83,8 +83,8 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       addTranscript(currentPlayer + " placed card " + cardIdxSelected);
       model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
       view.refresh();
-      cardIdxSelected = -1;
-      cellSelected = null;
+      cardIdxSelected = -1; ///
+      cellSelected = null; ///
       view.reset();
       viewEnabled = false;
     } catch (IllegalArgumentException | IllegalStateException e) {
@@ -109,13 +109,13 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     addTranscript(currentPlayer + " passed");
     try {
       model.pass();
-      cardIdxSelected = -1;
-      cellSelected = null;
+      cardIdxSelected = -1; ///
+      cellSelected = null; ///
       view.reset();
       viewEnabled = false;
     } catch (IllegalStateException e) {
-      JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
-                      + "Please play again. ", "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null,  e.getMessage(),
+              "Game Not Started", JOptionPane.INFORMATION_MESSAGE);
     }
 
     if (model.isGameOver()) {
@@ -153,7 +153,12 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
 
   @Override
   public void itsYourTurn() {
+    if (model.isGameOver()) {
+      processGameOver();
+      return;
+    }
     if (player.isHumanPlayer()) {
+      System.out.println("human player");
       viewEnabled = true;
       view.refresh(); //mar30
       String currentPlayer = "Player RED";

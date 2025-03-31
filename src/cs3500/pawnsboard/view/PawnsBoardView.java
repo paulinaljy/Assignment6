@@ -16,12 +16,14 @@ public interface PawnsBoardView {
   void makeVisible();
 
   /**
-   * Adds the observer to any listeners so actions on the view are
-   * delegated to the observer.
-   * @param observer observer
+   * Subscribes to the observer who should be notified about events.
+   * @param observer the ViewActions observer that should be notified
    */
   void subscribe(ViewActions observer);
 
+  /**
+   * Resets the selected cells on the GUI view game board.
+   */
   void reset();
 }
 
