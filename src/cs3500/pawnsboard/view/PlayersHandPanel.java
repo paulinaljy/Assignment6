@@ -147,7 +147,7 @@ public class PlayersHandPanel extends JPanel implements IntPlayersHandPanel {
      * @param evt the mouse event to be processed
      */
     public void mouseClicked(MouseEvent evt) {
-      if (pawnsBoardModel.isGameOver()) {
+      if (pawnsBoardModel.isGameOver() || !observer.isViewEnabled()) {
         return;
       }
       if (selectedCard == card) { // if selected card that is already selected

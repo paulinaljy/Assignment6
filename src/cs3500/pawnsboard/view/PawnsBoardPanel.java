@@ -312,7 +312,7 @@ public class PawnsBoardPanel extends JPanel implements IntPawnsBoardPanel {
     public void mouseClicked(MouseEvent evt) {
       Point2D physical = evt.getPoint();
 
-      if (model.isGameOver()) {
+      if (model.isGameOver() || !observer.isViewEnabled()) {
         return;
       }
 

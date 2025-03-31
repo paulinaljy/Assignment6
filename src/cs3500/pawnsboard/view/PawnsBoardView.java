@@ -21,5 +21,7 @@ public interface PawnsBoardView {
    * @param observer observer
    */
   void subscribe(ViewActions observer);
+
+  void reset();
 }
 

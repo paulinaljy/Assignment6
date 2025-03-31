@@ -85,10 +85,12 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       view.refresh();
       cardIdxSelected = -1;
       cellSelected = null;
+      view.reset();
+      viewEnabled = false;
     } catch (IllegalArgumentException | IllegalStateException e) {
       JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
-              + "Please play again.",
-              "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+              + "Please play again. ",
+              "Invalid Move.", JOptionPane.INFORMATION_MESSAGE);
     }
     if (model.isGameOver()) {
       processGameOver();
@@ -109,9 +111,11 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       model.pass();
       cardIdxSelected = -1;
       cellSelected = null;
+      view.reset();
+      viewEnabled = false;
     } catch (IllegalStateException e) {
       JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
-                      + "Please play again.", "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+                      + "Please play again. ", "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
     }
 
     if (model.isGameOver()) {
@@ -156,7 +160,6 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       if (player.getPlayerID() == 2) {
         currentPlayer = "Player BLUE";
       }
-      System.out.println(currentPlayer);
       JOptionPane.showMessageDialog(null, currentPlayer + ": It's your turn!",
               "It's Your Turn!", JOptionPane.INFORMATION_MESSAGE);
     }

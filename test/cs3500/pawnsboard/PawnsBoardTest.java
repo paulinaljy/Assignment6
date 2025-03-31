@@ -809,6 +809,18 @@ public class PawnsBoardTest {
   }
 
   @Test
+  public void testGameCardGetPositions() {
+    assertEquals(securityInfluenceGrid, security.getPositions());
+  }
+
+  @Test
+  public void testValueToCost() {
+    assertEquals(GameCard.Cost.ONE, security.valueToCost(1));
+    assertEquals(GameCard.Cost.TWO, security.valueToCost(2));
+    assertEquals(GameCard.Cost.THREE, security.valueToCost(3));
+  }
+
+  @Test
   public void testGameCardToString() {
     game1.startGame(p1Deck, p2Deck, 5, true);
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee,

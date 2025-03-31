@@ -80,9 +80,10 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void setNextPlayer() {
     this.isGameStarted();
-    // observer1.refreshView();
-    // observer2.refreshView();
     this.turn = (turn + 1) % 2;
+    this.drawNextCard();
+    observer1.refreshView();
+    observer2.refreshView();
     if (this.turn == 0) {
       if (observer1 != null) {
         observer1.itsYourTurn();
@@ -92,9 +93,6 @@ public class PawnsBoardModel implements QueensBlood {
         observer2.itsYourTurn();
       }
     }
-    // this.drawNextCard();
-    // observer1.refreshView();
-    // observer2.refreshView();
   }
 
   /**
@@ -183,7 +181,7 @@ public class PawnsBoardModel implements QueensBlood {
     card.setColor(currentPlayer.getColor());
     this.applyInfluenceCells(card, row, col, currentPlayer); // influence effect
     pass = 0; // sets pass to 0
-    currentPlayer.drawNextCard(0); //drawing next card mar30
+    //currentPlayer.drawNextCard(0); //drawing next card mar30
     this.setNextPlayer();
   }
 
@@ -236,7 +234,7 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void pass() {
     this.isGameStarted();
-    getCurrentPlayer().drawNextCard(0); //draw next card mar30
+    //getCurrentPlayer().drawNextCard(0); //draw next card mar30
     this.setNextPlayer();
     pass = pass + 1;
   }
