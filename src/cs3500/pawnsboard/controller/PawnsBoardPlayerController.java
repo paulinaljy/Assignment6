@@ -72,6 +72,8 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
   @Override
   public void placeCard() {
     String currentPlayer = this.player.toString();
+    int originalCardSelected = this.cardIdxSelected;
+    Point originalCellSelected = this.cellSelected;
     if (cardIdxSelected == -1) {
       JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
                       "select a card from hand first", "Message", JOptionPane.INFORMATION_MESSAGE);
@@ -82,13 +84,16 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     }
     try {
       addTranscript(currentPlayer + " placed card " + cardIdxSelected);
-      model.placeCardInPosition(cardIdxSelected, (int)cellSelected.getX(), (int)cellSelected.getY());
-      view.refresh();
-      cardIdxSelected = -1; ///
-      cellSelected = null; ///
-      view.reset();
+      cardIdxSelected = -1;
+      cellSelected = null;
       viewEnabled = false;
+      model.placeCardInPosition(originalCardSelected, (int)originalCellSelected.getX(), (int)originalCellSelected.getY());
+      view.refresh();
+      view.reset();
     } catch (IllegalArgumentException | IllegalStateException e) {
+      cardIdxSelected = originalCardSelected;
+      cellSelected = originalCellSelected;
+      viewEnabled = true;
       JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
               + "Please play again. ",
               "Invalid Move.", JOptionPane.INFORMATION_MESSAGE);
@@ -110,15 +115,14 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     addTranscript(currentPlayer + " passed");
     try {
       model.pass();
-      cardIdxSelected = -1; ///
-      cellSelected = null; ///
+      cardIdxSelected = -1;
+      cellSelected = null;
       view.reset();
       viewEnabled = false;
     } catch (IllegalStateException e) {
       JOptionPane.showMessageDialog(null,  e.getMessage(),
               "Game Not Started", JOptionPane.INFORMATION_MESSAGE);
     }
-
     if (model.isGameOver()) {
       processGameOver();
       return;

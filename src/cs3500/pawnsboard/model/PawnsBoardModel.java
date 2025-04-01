@@ -147,7 +147,7 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public boolean isGameOver() {
     this.isGameStarted();
-    return pass == 2;
+    return this.pass == 2;
   }
 
   @Override
@@ -156,26 +156,26 @@ public class PawnsBoardModel implements QueensBlood {
     Player currentPlayer = this.getCurrentPlayer();
 
     if (cardIdx < 0 || cardIdx >= currentPlayer.getHandSize()) {
-      throw new IllegalArgumentException("Selected ard index is out of bounds.");
+      throw new IllegalArgumentException("Selected card index is out of bounds. ");
     }
     if (row < 0 || row >= this.height) {
-      throw new IllegalArgumentException("Selected row is out of bounds.");
+      throw new IllegalArgumentException("Selected row is out of bounds. ");
     }
     if (col < 0 || col >= this.width) {
-      throw new IllegalArgumentException("Selected column is out of bounds.");
+      throw new IllegalArgumentException("Selected column is out of bounds. ");
     }
     Cell centerCell = board.get(row).get(col);
     // if there are no pawns (empty cell or game card)
     if (!centerCell.isCardPlaceable()) {
-      throw new IllegalStateException("You have no pawns on this cell. Cannot add card.");
+      throw new IllegalStateException("You have no pawns on this cell. Cannot add card. ");
     }
     // if the given card and position does not contain the same color pawn as the player
     if (!(centerCell.getOwnedColor().equals(currentPlayer.getColor()))) {
-      throw new IllegalStateException("You do not own these pawns.");
+      throw new IllegalStateException("You do not own these pawns. ");
     }
     // if the player does not have enough pawns to cover the cost of the card
     if (centerCell.getValue() < currentPlayer.getCard(cardIdx).getCost()) {
-      throw new IllegalStateException("You do not have enough pawns to cover the cost of this card.");
+      throw new IllegalStateException("You do not have enough pawns to cover the cost of this card. ");
     }
 
     GameCard card = currentPlayer.removeCard(cardIdx); // removes card from player's hand
@@ -236,8 +236,8 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void pass() {
     this.isGameStarted();
-    this.setNextPlayer();
     pass = pass + 1;
+    this.setNextPlayer();
   }
 
   @Override
