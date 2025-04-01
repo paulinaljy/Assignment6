@@ -19,7 +19,7 @@ import cs3500.pawnsboard.model.ReadOnlyCell;
  * Represents a mock of the pawns board model used for testing the strategies. Outputs a transcript
  * of the cell coordinates visited.
  */
-public class MockPawnsBoardModel implements QueensBlood {
+public class MockModelPlace implements QueensBlood {
   private StringBuilder log;
   private final int width;
   private final int height;
@@ -29,13 +29,13 @@ public class MockPawnsBoardModel implements QueensBlood {
   private int turn;
 
   /**
-   * Initializes a MockPawnsBoardModel with a string builder, width, height, and random object.
+   * Initializes a MockModelPlace with a string builder, width, height, and random object.
    * @param log the StringBuilder output
    * @param width the width of the board
    * @param height the height of the board
    * @param rand Random object
    */
-  public MockPawnsBoardModel(StringBuilder log, int width, int height, Random rand) {
+  public MockModelPlace(StringBuilder log, int width, int height, Random rand) {
     this.width = width;
     this.height = height;
     this.board = this.makeBoard();
@@ -87,7 +87,6 @@ public class MockPawnsBoardModel implements QueensBlood {
 
   @Override
   public Cell getCellAt(int row, int col) {
-    log.append("(" + row + "," + col + ") ");
     return this.board.get(row).get(col); // returns an empty cell, pawns, or cell
   }
 
@@ -100,6 +99,7 @@ public class MockPawnsBoardModel implements QueensBlood {
   public void placeCardInPosition(int cardIdx, int row, int col) {
     Player currentPlayer = this.getCurrentPlayer();
     GameCard card = currentPlayer.removeCard(cardIdx); // removes card from player's hand
+    log.append(cardIdx + " " + row + " " + col);
     this.board.get(row).set(col, card); // set card at given row and column
     card.setColor(currentPlayer.getColor());
     this.applyInfluenceCells(card, row, col, currentPlayer); // influence effect
@@ -182,7 +182,7 @@ public class MockPawnsBoardModel implements QueensBlood {
 
   @Override
   public List<GameCard> getHand(int playerID) {
-    return new ArrayList<GameCard>();
+    return players[playerID - 1].getHand();
   }
 
   @Override
@@ -268,3 +268,4 @@ public class MockPawnsBoardModel implements QueensBlood {
     }
   }
 }
+

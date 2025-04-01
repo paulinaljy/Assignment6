@@ -16,6 +16,7 @@ import cs3500.pawnsboard.model.GamePlayer;
 import cs3500.pawnsboard.model.HumanPlayer;
 import cs3500.pawnsboard.model.MachinePlayer;
 import cs3500.pawnsboard.model.PawnsBoardModel;
+import cs3500.pawnsboard.strategy.ControlBoard;
 import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
 
@@ -45,9 +46,10 @@ public final class PawnsBoardGame {
     view2.setLocation(view1.getX() + view1.getWidth(), view1.getY());
     view1.setVisible(true);
     view2.setVisible(true);
+    //GamePlayer player1 = new MachinePlayer(model, new ControlBoard(), 1);
     GamePlayer player1 = new HumanPlayer(model, 1);
-    //GamePlayer player2 = new HumanPlayer(model, 2);
-    GamePlayer player2 = new MachinePlayer(model, new FillFirst(),2);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    //GamePlayer player2 = new MachinePlayer(model, new FillFirst(),2);
     PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
     PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
     controller1.playGame();

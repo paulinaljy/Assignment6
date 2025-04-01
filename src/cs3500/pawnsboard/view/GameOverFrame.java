@@ -28,7 +28,7 @@ public class GameOverFrame extends JFrame{
       throw new IllegalArgumentException("Model cannot be null");
     }
 
-    setSize(125, 100);
+    setSize(125, 125);
     setLocation(600, 200);
 
     JLabel gameOverLabel = new JLabel("Game Over!");

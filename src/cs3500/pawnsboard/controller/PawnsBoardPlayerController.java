@@ -8,6 +8,7 @@ import javax.swing.*;
 import cs3500.pawnsboard.model.GamePlayer;
 import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.PawnsBoardModel;
+import cs3500.pawnsboard.model.QueensBlood;
 import cs3500.pawnsboard.view.GameOverFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
@@ -17,7 +18,7 @@ import cs3500.pawnsboard.view.ViewActions;
  * handling user interactions.
  */
 public class PawnsBoardPlayerController implements PawnsBoardController, ViewActions, ModelActions {
-  private PawnsBoardModel model;
+  private QueensBlood model;
   private PawnsBoardView view;
   private GamePlayer player;
   private Appendable transcript;
@@ -33,7 +34,7 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
    * @param player player
    * @throws IllegalArgumentException if model or view is null.
    */
-  public PawnsBoardPlayerController(PawnsBoardModel model, GamePlayer player, PawnsBoardView view) {
+  public PawnsBoardPlayerController(QueensBlood model, GamePlayer player, PawnsBoardView view) {
     if (view == null) {
       throw new IllegalArgumentException("View cannot be null");
     }
