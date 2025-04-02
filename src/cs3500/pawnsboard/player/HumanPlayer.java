@@ -1,11 +1,6 @@
-package cs3500.pawnsboard.model;
+package cs3500.pawnsboard.player;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Random;
-
-import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
-import cs3500.pawnsboard.strategy.Move;
+import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 import cs3500.pawnsboard.view.ViewActions;
 
 /**

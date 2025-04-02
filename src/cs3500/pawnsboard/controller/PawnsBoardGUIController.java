@@ -78,12 +78,6 @@ public class PawnsBoardGUIController implements PawnsBoardController, ViewAction
   }
 
   @Override
-  public void quit() {
-    addTranscript("Game quit");
-    System.exit(0);
-  }
-
-  @Override
   public void pass() {
     String currentPlayer = "Player 1";
     if (model.getCurrentPlayer().getColor().equals(Color.blue)) {

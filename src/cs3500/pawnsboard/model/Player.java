@@ -136,6 +136,10 @@ public class Player {
 
   @Override
   public String toString() {
-    return this.color.toString();
+    String player = "Player 1";
+    if (this.getColor().equals(Color.blue)) {
+      player = "Player 2";
+    }
+    return player;
   }
 }

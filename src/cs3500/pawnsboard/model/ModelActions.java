@@ -16,4 +16,9 @@ public interface ModelActions {
    * Notifies the player controller to refresh their view whenever the model updates the game state.
    */
   void refreshView();
+
+  /**
+   * Notifies the player controller that the game is over.
+   */
+  void processGameOver();
 }

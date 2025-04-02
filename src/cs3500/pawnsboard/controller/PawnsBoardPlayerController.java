@@ -5,9 +5,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import cs3500.pawnsboard.model.GamePlayer;
+import cs3500.pawnsboard.player.GamePlayer;
 import cs3500.pawnsboard.model.ModelActions;
-import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.QueensBlood;
 import cs3500.pawnsboard.view.GameOverFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
@@ -75,12 +74,14 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     int originalCardSelected = this.cardIdxSelected;
     Point originalCellSelected = this.cellSelected;
     if (cardIdxSelected == -1) {
-      JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
-                      "select a card from hand first", "Message", JOptionPane.INFORMATION_MESSAGE);
+      view.displayMessage(currentPlayer + ": " + "Please " +
+              "select a card from hand first.", "Message");
+      return;
     }
     if (cellSelected == null) {
-      JOptionPane.showMessageDialog(null, currentPlayer + ": " + "Please " +
-              "select a cell on the board first", "Message", JOptionPane.INFORMATION_MESSAGE);
+      view.displayMessage(currentPlayer + ": " + "Please " +
+              "select a cell on the board first.", "Message");
+      return;
     }
     try {
       addTranscript(currentPlayer + " placed card " + cardIdxSelected);
@@ -94,19 +95,9 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       cardIdxSelected = originalCardSelected;
       cellSelected = originalCellSelected;
       viewEnabled = true;
-      JOptionPane.showMessageDialog(null, currentPlayer + ": " + e.getMessage()
-              + "Please play again. ",
-              "Invalid Move.", JOptionPane.INFORMATION_MESSAGE);
+      view.displayMessage(currentPlayer + ": " + e.getMessage()
+              + "Please play again.", "Invalid Move");
     }
-    if (model.isGameOver()) {
-      processGameOver();
-    }
-  }
-
-  @Override
-  public void quit() {
-    addTranscript("Game quit");
-    System.exit(0);
   }
 
   @Override
@@ -120,12 +111,7 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       view.reset();
       viewEnabled = false;
     } catch (IllegalStateException e) {
-      JOptionPane.showMessageDialog(null,  e.getMessage(),
-              "Game Not Started", JOptionPane.INFORMATION_MESSAGE);
-    }
-    if (model.isGameOver()) {
-      processGameOver();
-      return;
+      view.displayMessage(e.getMessage(), "Game Not Started");
     }
     model.drawNextCard();
     view.refresh();
@@ -148,12 +134,9 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     return viewEnabled;
   }
 
-  private void processGameOver() {
-    if (model.isGameOver()) {
-      JFrame gameOverFrame = new GameOverFrame(model);
-      gameOverFrame.setVisible(true);
-      gameOverFrame.setFocusable(true);
-    }
+  @Override
+  public void processGameOver() {
+    view.displayGameOver();
   }
 
   @Override
@@ -163,15 +146,13 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       return;
     }
     if (player.isHumanPlayer()) {
-      System.out.println("human player");
       viewEnabled = true;
-      view.refresh(); //mar30
-      String currentPlayer = "Player RED";
+      view.refresh();
+      String currentPlayer = "Player 1";
       if (player.getPlayerID() == 2) {
-        currentPlayer = "Player BLUE";
+        currentPlayer = "Player 2";
       }
-      JOptionPane.showMessageDialog(null, currentPlayer + ": It's your turn!",
-              "It's Your Turn!", JOptionPane.INFORMATION_MESSAGE);
+      view.displayMessage(currentPlayer + ": It's your turn!", "It's Your Turn!");
     }
     player.chooseMove();
   }

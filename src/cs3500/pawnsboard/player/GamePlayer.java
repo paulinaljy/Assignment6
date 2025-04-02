@@ -1,4 +1,4 @@
-package cs3500.pawnsboard.model;
+package cs3500.pawnsboard.player;
 
 import cs3500.pawnsboard.strategy.Move;
 import cs3500.pawnsboard.view.ViewActions;

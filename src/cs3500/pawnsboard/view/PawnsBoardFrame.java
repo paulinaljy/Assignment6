@@ -5,8 +5,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 
@@ -70,14 +69,9 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
       @Override
       public void keyPressed(KeyEvent e) {
         if (!observer.isViewEnabled()) { // machine player
-          System.out.println("machine player");
           return;
         }
         switch (e.getKeyCode()) {
-          case KeyEvent.VK_Q: // quit game
-            observer.quit();
-            break;
-
           case KeyEvent.VK_ENTER: // confirm move
             observer.placeCard();
             break;
@@ -106,6 +100,18 @@ public class PawnsBoardFrame extends JFrame implements PawnsBoardView {
   @Override
   public void reset() {
     boardPanel.reset();
+  }
+
+  @Override
+  public void displayMessage(String message, String title) {
+    JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+  }
+
+  @Override
+  public void displayGameOver() {
+    JFrame gameOverFrame = new GameOverFrame(pawnsBoardModel);
+    gameOverFrame.setVisible(true);
+    gameOverFrame.setFocusable(true);
   }
 }
 

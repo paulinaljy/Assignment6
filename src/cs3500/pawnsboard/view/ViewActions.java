@@ -13,11 +13,6 @@ public interface ViewActions {
   void placeCard();
 
   /**
-   * Quits the game.
-   */
-  void quit();
-
-  /**
    * Passes to the next player's turn.
    */
   void pass();

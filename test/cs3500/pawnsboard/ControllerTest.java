@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -14,15 +13,20 @@ import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
 import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.GameCard;
-import cs3500.pawnsboard.model.GamePlayer;
-import cs3500.pawnsboard.model.HumanPlayer;
+import cs3500.pawnsboard.player.GamePlayer;
+import cs3500.pawnsboard.player.HumanPlayer;
+import cs3500.pawnsboard.player.MachinePlayer;
 import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
+import cs3500.pawnsboard.strategy.ControlBoard;
+import cs3500.pawnsboard.strategy.FillFirst;
+import cs3500.pawnsboard.strategy.MaxRowScore;
+import cs3500.pawnsboard.strategy.Move;
+import cs3500.pawnsboard.strategy.Strategy;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
-import cs3500.pawnsboard.view.PawnsBoardTextualView;
 import cs3500.pawnsboard.view.PawnsBoardView;
 
 import static org.junit.Assert.assertEquals;
@@ -36,15 +40,24 @@ public class ControllerTest {
   private ArrayList<Position> securityInfluenceGrid;
   private EmptyCell emptyCell;
   private Pawns redPawns;
-  private GameCard security;
-  private GameCard bee;
-  private GameCard sweeper;
-  private GameCard crab;
-  private GameCard queen;
-  private GameCard mandragora;
-  private GameCard trooper;
-  private GameCard cavestalker;
-  private GameCard lobber;
+  private GameCard security1;
+  private GameCard bee1;
+  private GameCard sweeper1;
+  private GameCard crab1;
+  private GameCard queen1;
+  private GameCard mandragora1;
+  private GameCard trooper1;
+  private GameCard cavestalker1;
+  private GameCard lobber1;
+  private GameCard security2;
+  private GameCard bee2;
+  private GameCard sweeper2;
+  private GameCard crab2;
+  private GameCard queen2;
+  private GameCard mandragora2;
+  private GameCard trooper2;
+  private GameCard cavestalker2;
+  private GameCard lobber2;
   private QueensBlood game1;
   private ArrayList<GameCard> p1Deck;
   private ArrayList<GameCard> p2Deck;
@@ -112,26 +125,39 @@ public class ControllerTest {
     redPawns = new Pawns(Color.red);
     Pawns bluePawns = new Pawns(Color.blue);
 
-    security = new GameCard("Security", GameCard.Cost.ONE, 1,
+    security1 = new GameCard("Security", GameCard.Cost.ONE, 2,
             securityInfluenceGrid);
-    bee = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
-    sweeper = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
-    crab = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
-    queen = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
-    mandragora = new GameCard("Mandragora", GameCard.Cost.ONE, 1,
+    bee1 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
+    sweeper1 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
+    crab1 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
+    queen1 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
+    mandragora1 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
             mandragoraInfluenceGrid);
-    trooper = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
-    cavestalker = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
+    trooper1 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
+    cavestalker1 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
             cavestalkerInfluenceGrid);
-    lobber = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
+    lobber1 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
 
-    p1Deck = new ArrayList<GameCard>(Arrays.asList(security, bee, sweeper, crab, mandragora, queen,
-            trooper, cavestalker, lobber, security, bee, sweeper, crab, mandragora, queen, trooper,
-            cavestalker, lobber));
+    security2 = new GameCard("Security", GameCard.Cost.ONE, 2,
+            securityInfluenceGrid);
+    bee2 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
+    sweeper2 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
+    crab2 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
+    queen2 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
+    mandragora2 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
+            mandragoraInfluenceGrid);
+    trooper2 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
+    cavestalker2 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
+            cavestalkerInfluenceGrid);
+    lobber2 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
 
-    p2Deck = new ArrayList<GameCard>(Arrays.asList(security, bee, sweeper, crab, mandragora, queen,
-            trooper, cavestalker, lobber, security, bee, sweeper, crab, mandragora, queen,
-            trooper, cavestalker, lobber));
+    p1Deck = new ArrayList<GameCard>(Arrays.asList(security1, bee1, sweeper1, crab1, mandragora1, queen1,
+            trooper1, cavestalker1, lobber1, security1, bee1, sweeper1, crab1, mandragora1, queen1,
+            trooper1, cavestalker1, lobber1));
+
+    p2Deck = new ArrayList<GameCard>(Arrays.asList(security2, bee2, sweeper2, crab2, mandragora2, queen2,
+            trooper2, cavestalker2, lobber2, security2, bee2, sweeper2, crab2, mandragora2, queen2,
+            trooper2, cavestalker2, lobber2));
 
     deckConfig = new PawnsBoardDeckConfig();
   }
@@ -147,28 +173,106 @@ public class ControllerTest {
 
   }
 
-  @Test (expected = IllegalStateException.class)
-  public void testGameNotStarted() {
-
-  }
-
   // integration test: testing single valid move for place
+  // mock view: notified => prints board
   @Test
   public void testSingleValidMovePlaceHumanPlayer1() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
 
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view1.toString());
+
+    controller1.setCardIdx(0);
+    controller1.setSelectedCell(0,0);
+    controller1.placeCard();
+
+    String newExpected =
+            "2 R1__1 0\n" +
+                    "0 2___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(newExpected, view1.toString());
   }
 
   @Test
   public void testSingleValidMovePlaceHumanPlayer2() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
 
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view2.toString());
+
+    controller1.pass();
+    controller2.setCardIdx(1);
+    controller2.setSelectedCell(0,4);
+    controller2.placeCard();
+
+    String newExpected =
+            "0 1___B 1\n"
+                    + "0 1___1 0\n"
+                    + "0 1___2 0\n"
+                    + "Player 2: It's your turn!";
+    assertEquals(newExpected, view2.toString());
   }
 
   @Test
   public void testSingleValidMovePlaceMachinePlayer() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new MachinePlayer(model, new FillFirst(), 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
 
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view2.toString());
+
+    player1.chooseMove();
+
+    String newExpected =
+            "2 R1__1 0\n" +
+                    "0 2___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(newExpected, view1.toString());
   }
 
   // integration test: testing pass
+  // mock view: notified => prints board
   @Test
   public void testSingleValidMovePassHumanPlayer1() {
 
@@ -184,84 +288,213 @@ public class ControllerTest {
 
   }
 
-  // integration test: game played to completion with all valid inputs
+  // integration test: when model indicates move is invalid for placeCard
+  // mock view: notified => print e.message with board
   @Test
-  public void testValidGamePlayHumanPlayers() {
+  public void testModelInvalidCardIdxPlace() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
+
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view1.toString());
+
+    controller1.setCardIdx(-2);
+    controller1.setSelectedCell(0,0);
+    controller1.placeCard();
+
+    String newExpected =
+            "0 1___1 0\n"
+            + "0 1___1 0\n"
+            + "0 1___1 0\n"
+            + "Player 1: Selected card index is out of bounds. Please play again.";
+    assertEquals(newExpected, view1.toString());
+  }
+
+  @Test
+  public void testModelInvalidRowPlaceInput() {
+    // Selected row is out of bounds. Please play again.
+  }
+
+  @Test
+  public void testModelInvalidColumnPlaceInput() {
+    // Selected column is out of bounds. Please play again.
+  }
+
+  @Test
+  public void testModelPlaceCannotAddCardNoPawnsInput() {
+    // You have no pawns on this cell. Cannot add card. Please play again.
+  }
+
+  @Test
+  public void testModelPlaceCannotAddCardNoPlayerPawnsOwnershipInput() {
+    // You do not own these pawns. Cannot add card. Please play again.
+  }
+
+  @Test
+  public void testModelPlaceCannotAddCardCannotCoverCostInput() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
+
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view1.toString());
+
+    controller1.setCardIdx(2);
+    controller1.setSelectedCell(0,0);
+    controller1.placeCard();
+
+    String newExpected =
+            "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "Player 1: You do not have enough pawns to cover the cost of this card. " +
+                    "Please play again.";
+    assertEquals(newExpected, view1.toString());
+  }
+
+  // integration test: game played to completion with valid and invalid moves (pass, place)
+  // mock view: notified => prints board
+  @Test
+  public void testGamePlayHumanPlayers() {
 
   }
 
   @Test
-  public void testValidGamePlayHumanAndMachinePlayer() {
+  public void testSuccessfulGamePlayHumanAndMachinePlayer() {
 
   }
 
   @Test
-  public void testValidGamePlayMachinePlayers() {
+  public void testSuccessfulGamePlayMachinePlayers() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new MachinePlayer(model, new ControlBoard(), 1);
+    GamePlayer player2 = new MachinePlayer(model, new FillFirst(), 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
 
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    player1.chooseMove();
+    String expected =
+            "8 RRRRB 2\n" +
+                    "2 12R1B 1\n"
+                    + "0 1111B 1\n"
+            + "Game Over.\n"
+            + "Winner: Player 1\n"
+            + "Winning Score: 10";
+    assertEquals(expected, view1.toString());
   }
-
-  // integration test: game played to completion with invalid inputs
-  @Test
-  public void testInvalidGamePlayHumanPlayers() {
-
-  }
-
-  @Test
-  public void testInvalidGamePlayHumanAndMachinePlayer() {
-
-  }
-
-  @Test
-  public void testInvalidGamePlayMachinePlayers() {
-
-  }
-
-  // integration test: game quit at any point
-  @Test
-  public void testQuitGameHumanPlayer() {
-
-  }
-
-  @Test
-  public void testQuitGameMachinePlayer() {
-
-  }
-
-  @Test
-  public void testQuitGameAfterStartGame() {
-
-  }
-
-  // unit test: game quits anytime
-  @Test
-  public void testControllerQuitHumanPlayer() {
-
-  }
-
-  @Test
-  public void testControllerQuitMachinePlayer() {
-
-  }
-
-  @Test
-  public void testControllerQuitAfterStartGame() {
-
-  }
-
 
   // integration test: controller taking in too little inputs
+  // mock view => notified, prints e.message with board
   @Test
   public void testIntegrationPlaceNoCardIdx() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
 
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view1.toString());
+
+    controller1.setSelectedCell(0,0);
+    controller1.placeCard();
+
+    String newExpected =
+            "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "Player 1: Please select a card from hand first.";
+    assertEquals(newExpected, view1.toString());
   }
 
   @Test
   public void testIntegrationNoCellSelected() {
+    // Please select a cell on the board first.
+  }
 
+  // integration test: it's your turn notification
+  // mock view => notified, prints e.message with board
+  @Test
+  public void testPlayer1ItsYourTurn() {
+    QueensBlood model = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
+    model.startGame(p1Deck, p2Deck, 5, false);
+    GamePlayer player1 = new HumanPlayer(model, 1);
+    GamePlayer player2 = new HumanPlayer(model, 2);
+    PawnsBoardView view1 = new MockPawnsBoardView(model, 1);
+    PawnsBoardView view2 = new MockPawnsBoardView(model, 2);
+
+    PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+    PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+
+    controller1.playGame();
+    controller2.playGame();
+
+    String expected =
+            "0 1___1 0\n" +
+                    "0 1___1 0\n"
+                    + "0 1___1 0\n";
+    assertEquals(expected, view1.toString());
+
+    controller1.itsYourTurn();
+
+    String newExpected =
+            "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "0 1___1 0\n"
+                    + "Player 1: It's your turn!";
+    assertEquals(newExpected, view1.toString());
   }
 
   @Test
-  public void testControllerSelectValidCard() {
+  public void testPlayer2ItsYourTurn() {
+
+  }
+
+  // unit test: controller set card index, row, col for placeCard correctly
+  @Test
+  public void testControllerSetCardIdxCellCorrectly() {
     StringBuilder log1 = new StringBuilder();
     QueensBlood model = new MockModelPlace(log1, 5, 3, new Random(6));
     model.startGame(p1Deck, p2Deck, 5, false);
@@ -275,107 +508,4 @@ public class ControllerTest {
     controller.placeCard();
     assertEquals("0 1 0", log1.toString());
   }
-
-  // unit test: controller taking too little inputs
-  @Test(expected = IllegalStateException.class)
-  public void testControllerPlaceNoCardIdx() { ///////////////// mock controller throw exception
-    StringBuilder log1 = new StringBuilder();
-    QueensBlood model = new MockModelPlace(log1, 5, 3, new Random(6));
-    model.startGame(p1Deck, p2Deck, 5, false);
-    GamePlayer player1 = new HumanPlayer(model, 1);
-    PawnsBoardView view = new PawnsBoardFrame(model, 1);
-
-    PawnsBoardPlayerController controller = new PawnsBoardPlayerController(model, player1, view);
-    controller.playGame();
-    controller.setSelectedCell(1,0);
-    controller.placeCard();
-  }
-
-  @Test
-  public void testControllerNoCellSelected() { ///////////////// mock controller throw exception
-
-  }
-
-  // integration test: when model indicates move is invalid for placeCard
-  @Test
-  public void testModelInvalidCardIdxPlace() {
-
-  }
-
-  @Test
-  public void testModelInvalidRowPlaceInput() {
-
-  }
-
-  @Test
-  public void testModelInvalidColumnPlaceInput() {
-
-  }
-
-  @Test
-  public void testModelPlaceCannotAddCardNoPawnsInput() {
-
-  }
-
-  @Test
-  public void testModelPlaceCannotAddCardNoPlayerPawnsOwnershipInput() {
-
-  }
-
-  @Test
-  public void testModelPlaceCannotAddCardCannotCoverCostInput() {
-
-  }
-
-  // unit test: when model indicates move is invalid for placeCard
-  @Test
-  public void testControllerModelInvalidCardIdxPlace() { ///////////////// mock controller throw exception
-
-  }
-
-  @Test
-  public void testControllerModelInvalidRowPlaceInput() { ///////////////// mock controller throw exception
-
-  }
-
-  @Test
-  public void testControllerModelInvalidColumnPlaceInput() { ///////////////// mock controller throw exception
-
-  }
-
-  @Test
-  public void testControllerModelPlaceCannotAddCardNoPawnsInput() { ///////////////// mock controller throw exception
-
-  }
-
-  @Test
-  public void testControllerModelPlaceCannotAddCardNoPlayerPawnsOwnershipInput() { ///////////////// mock controller throw exception
-
-  }
-
-  @Test
-  public void testControllerModelPlaceCannotAddCardCannotCoverCostInput() { ///////////////// mock controller throw exception
-
-  }
-
-  // unit test: controller set card index correctly
-  @Test
-  public void testControllerSetCardIdxCorrectly() {
-
-  }
-
-  // unit test: controller set cell selected correctly
-  @Test
-  public void testControllerSetCellSelectedCorrectly() {
-
-  }
-
-  // test viewEnabled
-
-  // test itsYourTurn
-
-  // test viewRefreshed
-
-  // test processGameOver
-
 }

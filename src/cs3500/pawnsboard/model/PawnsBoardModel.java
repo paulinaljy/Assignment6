@@ -83,6 +83,9 @@ public class PawnsBoardModel implements QueensBlood {
   @Override
   public void setNextPlayer() {
     this.isGameStarted();
+    if (this.isGameOver()) {
+      observer1.processGameOver();
+    }
     this.turn = (turn + 1) % 2;
     this.drawNextCard();
     observer1.refreshView();
@@ -171,7 +174,7 @@ public class PawnsBoardModel implements QueensBlood {
     }
     // if the given card and position does not contain the same color pawn as the player
     if (!(centerCell.getOwnedColor().equals(currentPlayer.getColor()))) {
-      throw new IllegalStateException("You do not own these pawns. ");
+      throw new IllegalStateException("You do not own these pawns. Cannot add card. ");
     }
     // if the player does not have enough pawns to cover the cost of the card
     if (centerCell.getValue() < currentPlayer.getCard(cardIdx).getCost()) {

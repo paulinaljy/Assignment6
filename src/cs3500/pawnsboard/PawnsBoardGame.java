@@ -3,19 +3,17 @@ package cs3500.pawnsboard;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Random;
 
-import cs3500.pawnsboard.controller.PawnsBoardGUIController;
 import cs3500.pawnsboard.controller.DeckConfiguration;
 import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.model.GameCard;
 import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
-import cs3500.pawnsboard.model.GamePlayer;
-import cs3500.pawnsboard.model.HumanPlayer;
-import cs3500.pawnsboard.model.MachinePlayer;
+import cs3500.pawnsboard.player.GamePlayer;
+import cs3500.pawnsboard.player.HumanPlayer;
 import cs3500.pawnsboard.model.PawnsBoardModel;
+import cs3500.pawnsboard.player.MachinePlayer;
 import cs3500.pawnsboard.strategy.ControlBoard;
 import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.view.PawnsBoardFrame;
@@ -34,7 +32,7 @@ public final class PawnsBoardGame {
    */
   public static void main(String[] args) throws IOException {
     DeckConfiguration deckConfig = new PawnsBoardDeckConfig();
-    PawnsBoardModel model = new PawnsBoardModel(5, 7, new Random(), deckConfig);
+    PawnsBoardModel model = new PawnsBoardModel(5, 7, new Random(6), deckConfig);
     String path = "docs" + File.separator + "gameDeck.config";
     File config = new File(path);
     List<GameCard> p1Deck = deckConfig.loadDeckConfig(new FileReader(config));

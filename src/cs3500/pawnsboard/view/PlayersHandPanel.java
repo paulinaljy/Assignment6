@@ -19,7 +19,7 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
  */
 public class PlayersHandPanel extends JPanel implements IntPlayersHandPanel {
 
-  private GameCardPanel selectedCard = null;
+  private GameCardPanel selectedCard;
   private List<GameCardPanel> playersHand;
   private final ReadonlyPawnsBoardModel pawnsBoardModel;
   private final int playerID;
@@ -40,6 +40,7 @@ public class PlayersHandPanel extends JPanel implements IntPlayersHandPanel {
     }
 
     this.pawnsBoardModel = pawnsBoardModel;
+    this.selectedCard = null;
 
     setLayout(new GridLayout(1, 1));
     createHand();
