@@ -35,31 +35,6 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 public class ControllerTest {
-  private Position leftSecurity;
-  private Position rightSecurity;
-  private Position topSecurity;
-  private Position bottomSecurity;
-  private ArrayList<Position> securityInfluenceGrid;
-  private EmptyCell emptyCell;
-  private Pawns redPawns;
-  private GameCard security1;
-  private GameCard bee1;
-  private GameCard sweeper1;
-  private GameCard crab1;
-  private GameCard queen1;
-  private GameCard mandragora1;
-  private GameCard trooper1;
-  private GameCard cavestalker1;
-  private GameCard lobber1;
-  private GameCard security2;
-  private GameCard bee2;
-  private GameCard sweeper2;
-  private GameCard crab2;
-  private GameCard queen2;
-  private GameCard mandragora2;
-  private GameCard trooper2;
-  private GameCard cavestalker2;
-  private GameCard lobber2;
   private QueensBlood game1;
   private ArrayList<GameCard> p1Deck;
   private ArrayList<GameCard> p2Deck;
@@ -69,11 +44,11 @@ public class ControllerTest {
 
   @Before
   public void setup() {
-    leftSecurity = new Position(0, -1); // (2,1)
-    rightSecurity = new Position(0, 1); // (2,3)
-    topSecurity = new Position(-1, 0); // (1,2)
-    bottomSecurity = new Position(1, 0); // (3,2)
-    securityInfluenceGrid = new ArrayList<Position>(Arrays.asList(topSecurity, leftSecurity,
+    Position leftSecurity = new Position(0, -1); // (2,1)
+    Position rightSecurity = new Position(0, 1); // (2,3)
+    Position topSecurity = new Position(-1, 0); // (1,2)
+    Position bottomSecurity = new Position(1, 0); // (3,2)
+    ArrayList<Position> securityInfluenceGrid = new ArrayList<Position>(Arrays.asList(topSecurity, leftSecurity,
             rightSecurity, bottomSecurity));
 
     Position topMandragora = new Position(-1, 0); // (1,2)
@@ -123,35 +98,35 @@ public class ControllerTest {
     Position rightLobber = new Position(0, 2);
     ArrayList<Position> lobberInfluenceGrid = new ArrayList<Position>(Arrays.asList(rightLobber));
 
-    emptyCell = new EmptyCell();
-    redPawns = new Pawns(Color.red);
+    EmptyCell emptyCell = new EmptyCell();
+    Pawns redPawns = new Pawns(Color.red);
     Pawns bluePawns = new Pawns(Color.blue);
 
-    security1 = new GameCard("Security", GameCard.Cost.ONE, 2,
+    GameCard security1 = new GameCard("Security", GameCard.Cost.ONE, 2,
             securityInfluenceGrid);
-    bee1 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
-    sweeper1 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
-    crab1 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
-    queen1 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
-    mandragora1 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
+    GameCard bee1 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
+    GameCard sweeper1 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
+    GameCard crab1 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
+    GameCard queen1 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
+    GameCard mandragora1 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
             mandragoraInfluenceGrid);
-    trooper1 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
-    cavestalker1 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
+    GameCard trooper1 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
+    GameCard cavestalker1 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
             cavestalkerInfluenceGrid);
-    lobber1 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
+    GameCard lobber1 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
 
-    security2 = new GameCard("Security", GameCard.Cost.ONE, 2,
+    GameCard security2 = new GameCard("Security", GameCard.Cost.ONE, 2,
             securityInfluenceGrid);
-    bee2 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
-    sweeper2 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
-    crab2 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
-    queen2 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
-    mandragora2 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
+    GameCard bee2 = new GameCard("Bee", GameCard.Cost.ONE, 1, beeInfluenceGrid);
+    GameCard sweeper2 = new GameCard("Sweeper", GameCard.Cost.TWO, 2, sweeperInfluenceGrid);
+    GameCard crab2 = new GameCard("Crab", GameCard.Cost.ONE, 1, crabInfluenceGrid);
+    GameCard queen2 = new GameCard("Queen", GameCard.Cost.ONE, 1, queenInfluenceGrid);
+    GameCard mandragora2 = new GameCard("Mandragora", GameCard.Cost.ONE, 2,
             mandragoraInfluenceGrid);
-    trooper2 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
-    cavestalker2 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
+    GameCard trooper2 = new GameCard("Trooper", GameCard.Cost.TWO, 3, trooperInfluenceGrid);
+    GameCard cavestalker2 = new GameCard("Cavestalker", GameCard.Cost.THREE, 4,
             cavestalkerInfluenceGrid);
-    lobber2 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
+    GameCard lobber2 = new GameCard("Lobber", GameCard.Cost.TWO, 1, lobberInfluenceGrid);
 
     p1Deck = new ArrayList<GameCard>(Arrays.asList(security1, bee1, sweeper1, crab1, mandragora1, queen1,
             trooper1, cavestalker1, lobber1, security1, bee1, sweeper1, crab1, mandragora1, queen1,
