@@ -34,6 +34,7 @@ public class MockPawnsBoardModel implements QueensBlood {
    * @param width the width of the board
    * @param height the height of the board
    * @param rand Random object
+   * @param log StringBuilder output
    */
   public MockPawnsBoardModel(StringBuilder log, int width, int height, Random rand) {
     this.width = width;

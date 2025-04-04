@@ -2,6 +2,9 @@ package cs3500.pawnsboard;
 
 import cs3500.pawnsboard.view.ViewActions;
 
+/**
+ * Represents a mock of the view actions used for testing.
+ */
 public class MockViewActions implements ViewActions {
   public boolean passCalled = false;
   public boolean placeCardCalled = false;

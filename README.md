@@ -28,18 +28,21 @@ To use this codebase:
    view1.setVisible(true);
    view2.setVisible(true);
 
-6) Instantiate a new PawnsBoardGUIController with the model and two views and call play game on the controller:
-   PawnsBoardGUIController controller = new PawnsBoardGUIController(model, view1, view2);
-   controller.playGame();
+6) Create two players using the GamePlayer object, either a HumanPlayer or MachinePlayer with a strategy:
+   GamePlayer player1 = HumanPlayer(model, 1);
+   GamePlayer player2 = MachinePlayer(model, new FillFirst(), 2);
 
-6) Call the desired move, either place a card on the board or pass:
-    - to place: call placeCardInPosition with the card index, row, and column
-      EX: model.placeCardInPosition(0, 1, 1);
-    - to pass: call pass();
-      EX: model.pass();
+7) Instantiate a new PawnsBoardPlayerController for each GamePlayer and call playGame on each controller:
+   PawnsBoardPlayerController controller1 = new PawnsBoardPlayerController(model, player1, view1);
+   PawnsBoardPlayerController controller2 = new PawnsBoardPlayerController(model, player2, view2);
+   controller1.playGame();
+   controller2.playGame();
+
+8) Human Players: Once it's your turn, select the desired move, either place a card on the board or pass:
+    - to place: select a cell and card on GUI and press "enter" key
+    - to pass: press "space" bar
 
 KEY COMPONENTS:
-- PawnsBoardTextualView: Displays and updates the textual view of the board based on the model
 - PawnsBoardModel: Manages the board and keeps track of the state of the game
     - Has game play behaviors, including starting the game, placing a card, passing, performing the
       influence effect of placing a card, getting a cell at a specific board position, setting the
@@ -47,12 +50,14 @@ KEY COMPONENTS:
       determining if the game is over
     - Has scoring behaviors, including calculating the score of each player, determining the winner
       and winning score of the game
-- PawnsBoardFrame: Displays and updates the GUI view of the game, including the board (cells and score) and player's hand, and responds to key events
-- PawnsBoardGUIController: Responds to user interaction, telling the model what to do and GUI view to update
-- Strategy: Represents different strategies a player can use, including fill first, max row score, controlling the board, or blocking an opponent
+- PawnsBoardView: Displays and updates the GUI view of the game 
+- PawnsBoardPlayerController: Responds to user interaction, telling the model what to do and GUI view to update
+- GamePlayer: Actions available to all the players in the game (Human and Machine)
+- Strategy: Represents different strategies a MachinePlayer can use, including fill first, max row score, controlling the board, or blocking an opponent
 
 The driving components of this codebase include the PawnsBoardModel, which enforces the rules and
-updates the game state; the PawnsBoardFrame, which updates the GUI at every game state; and the users' actions, which initiate changes in the game's state.
+updates the game state; the PawnsBoardView, which updates the GUI at every game state; and the 
+PawnsBoardPlayerController, which respond to user actions and initiate changes in the game's state.
 
 The driven components of this codebase include the board, which updates in response to changes in
 the game state, and the view, which visually reflects these updates without influencing gameplay.
@@ -64,7 +69,8 @@ KEY SUB-COMPONENTS:
     - Pawns: Represents a cell with pawns (either 1, 2, or 3) and a color (representing which player currently owns the pawns)
     - GameCard: Represents a game card used to play in the game with a cost, value, and influenceGrid,
       which is a list of Positions relative to the center card position (2,2)
-- Player: Represents a player in the game with a unique hand, deck, and color (red or blue)
+- Player: Represents a model player in the game with a unique hand, deck, and color (red or blue)
+- GamePlayer: Represents a type of player, either human or machine, that plays the game 
 - PawnsBoardPanel: Represents the GUI view of the game board, including the cells and row score of each player
     - Updates the GUI in response to mouse click events of selecting and deselecting cells
 - PlayersHandPanel: Represents the GUI view of the player's hand, which are made up of game cards
@@ -110,7 +116,7 @@ The GameCardPanel class can be found: src/cs3500/pawnsboard/view/GameCardPanel.j
 The GameOverFrame class can be found: src/cs3500/pawnsboard/view/GameOverFrame.java
 
 The PawnsBoardController interface can be found: src/cs3500/pawnsboard/controller/PawnsBoardController.java
-The PawnsBoardGUIController class can be found: src/cs3500/pawnsboard/controller/PawnsBoardGUIController.java
+The PawnsBoardPlayerController class can be found: src/cs3500/pawnsboard/controller/PawnsBoardPlayerController.java
 
 The Strategy interface can be found: src/cs3500/pawnsboard/strategy/Strategy.java
 The FillFirst class can be found: src/cs3500/pawnsboard/strategy/FillFirst.java
@@ -118,6 +124,14 @@ The MaxRowScore class can be found: src/cs3500/pawnsboard/strategy/MaxRowScore.j
 The ControlBoard class can be found: src/cs3500/pawnsboard/strategy/ControlBoard.java
 The BlockOpponent class can be found: src/cs3500/pawnsboard/strategy/BlockOpponent.java
 The Move class can be found: src/cs3500/pawnsboard/strategy/Move.java
+
+The ModelActions interface can be found: src/cs3500/pawnsboard/model/ModelActions.java
+
+The GamePlayer interface can be found: src/cs3500/pawnsboard/player/GamePlayer.java
+The HumanPlayer class can be found: src/cs3500/pawnsboard/player/HumanPlayer.java
+The MachinePlayer class can be found: src/cs3500/pawnsboard/player/MachinePlayer.java
+
+The PawnsBoardBuilder class can be found: src/cs3500/pawnsboard/model/PawnsBoardBuilder.java
 
 The PawnsBoard (textual view main method) can be found: src/cs3500/pawnsboard/PawnsBoard.java
 The PawnsBoardGame (GUI view main method) can be found: src/cs3500/pawnsboard/PawnsBoardGame.java
@@ -160,5 +174,20 @@ In Strategy:
   - BlockOpponent takes in a list of any combination of strategies and looks for the move that allows the current player to block the opponent's best move
 - Strategy implementation can be found: src/cs3500/pawnsboard/strategy 
 - Tests for strategies can be found: test/cs3500/pawnsboard/StrategyTest.java
+
+CHANGES FROM ASSIGNMENT 6:
+In View:
+- Added new behavior to ViewActions:
+  - isViewEnabled: returns whether the view should be playable (cells and cards clickable), necessary to distinguish machine vs. human player
+- Added new behaviors to PawnsBoardView:
+  - reset: resets the selected cells on the GUI view board
+  - displayMessage: displays an error message in the GUI view game board as a message dialog
+  - displayGameOverMessage: displays the game over message in the GUI view game board
+
+In Model:
+- Added a new interface ModelActions that notifies the controller whenever the model updates the game state:
+  - itsYourTurn: notifies the player controller it's their turn and to choose a move 
+  - refreshView: notifies the player controller to refresh their view 
+  - processGameOver: notifies the player controller that the game is over
 
 

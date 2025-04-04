@@ -10,12 +10,21 @@ import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.QueensBloodTextualView;
 import cs3500.pawnsboard.view.ViewActions;
 
+/**
+ * Represents a mock of the pawns board view that prints out the textual view of the board.
+ */
 public class MockPawnsBoardView implements PawnsBoardView, QueensBloodTextualView {
   private final ReadonlyPawnsBoardModel model;
   private final int playerID;
   private boolean displayMessage;
   private String message;
   private boolean displayGameOver;
+
+  /**
+   * Initializes a MockPawnsBoardView with a model and player id.
+   * @param model the model in the game
+   * @param playerID corresponding player id of the current player
+   */
   public MockPawnsBoardView(ReadonlyPawnsBoardModel model, int playerID) {
     this.model = model;
     this.playerID = playerID;
@@ -75,7 +84,7 @@ public class MockPawnsBoardView implements PawnsBoardView, QueensBloodTextualVie
       board += message;
     }
     if (this.displayGameOver) {
-      board += "Game Over." + "\n" + "Winner: " + model.getWinner() + "\n" + "Winning Score: " + model.getWinningScore();
+      board += "\n" + "Game Over." + "\n" + "Winner: " + model.getWinner() + "\n" + "Winning Score: " + model.getWinningScore();
     }
     return board;
   }

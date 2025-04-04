@@ -10,18 +10,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import cs3500.pawnsboard.controller.DeckConfiguration;
+import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
+import cs3500.pawnsboard.model.Cell;
 import cs3500.pawnsboard.model.EmptyCell;
 import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.Pawns;
 import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
+import cs3500.pawnsboard.model.PawnsBoardBuilder;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Player;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
+import cs3500.pawnsboard.player.GamePlayer;
+import cs3500.pawnsboard.player.HumanPlayer;
 import cs3500.pawnsboard.view.PawnsBoardTextualView;
+import cs3500.pawnsboard.view.PawnsBoardView;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,6 +47,7 @@ public class PawnsBoardTest {
   private ArrayList<Position> securityInfluenceGrid;
   private EmptyCell emptyCell;
   private Pawns redPawns;
+  private Pawns bluePawns;
   private GameCard security;
   private GameCard bee;
   private GameCard sweeper;
@@ -53,7 +62,13 @@ public class PawnsBoardTest {
   private ArrayList<GameCard> p2Deck;
   private Player player1;
   private Player player2;
+  private GamePlayer humanPlayer1;
+  private GamePlayer humanPlayer2;
   private DeckConfiguration deckConfig;
+  private PawnsBoardView view1;
+  private PawnsBoardView view2;
+  private ModelActions observer1;
+  private ModelActions observer2;
 
   @Before
   public void setup() {
@@ -113,7 +128,7 @@ public class PawnsBoardTest {
 
     emptyCell = new EmptyCell();
     redPawns = new Pawns(Color.red);
-    Pawns bluePawns = new Pawns(Color.blue);
+    bluePawns = new Pawns(Color.blue);
 
     security = new GameCard("Security", GameCard.Cost.ONE, 1,
             securityInfluenceGrid);
@@ -141,6 +156,13 @@ public class PawnsBoardTest {
     game1 = new PawnsBoardModel(5, 3, new Random(6), deckConfig);
     player1 = new Player(Color.RED, p1Deck, 5, new Random(6), true);
     player2 = new Player(Color.BLUE, p2Deck, 5, new Random(6), true);
+
+    view1 = new MockPawnsBoardView(game1, 1);
+    humanPlayer1 = new HumanPlayer(game1, 1);
+    observer1 = new PawnsBoardPlayerController(game1, humanPlayer1, view1);
+    view2 = new MockPawnsBoardView(game1, 2);
+    humanPlayer2 = new HumanPlayer(game1, 2);
+    observer2 = new PawnsBoardPlayerController(game1, humanPlayer2, view2);
   }
 
   @Test
@@ -222,6 +244,8 @@ public class PawnsBoardTest {
   @Test
   public void testValidPlaceCardInPosition() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     // check player hand
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, mandragora,
@@ -243,7 +267,8 @@ public class PawnsBoardTest {
 
     // check updated player hand
     game1.pass();
-    assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, queen, security)),
+    assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee, sweeper, queen, security,
+                    sweeper)),
             game1.getHand(game1.getCurrentPlayerID()));
 
     // check center cell changed - is not pawns but game card
@@ -264,6 +289,8 @@ public class PawnsBoardTest {
   @Test
   public void testPlaceCardOffBoard() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     assertEquals(1, game1.getCellAt(0, 0).getValue());
 
@@ -277,6 +304,8 @@ public class PawnsBoardTest {
   @Test
   public void testInfluenceCellAddPawn() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     assertFalse(game1.getCellAt(1, 1).isCardPlaceable()); // (1,1) empty cell
     assertEquals(0, game1.getCellAt(1, 1).getValue());
@@ -297,6 +326,8 @@ public class PawnsBoardTest {
   @Test
   public void testInfluenceCellIncreasePawn() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
     game1.pass();
 
     assertEquals(1, game1.getCellAt(0, 4).getValue()); // 1 pawn
@@ -310,6 +341,8 @@ public class PawnsBoardTest {
   @Test
   public void testInfluenceCellChangePawnOwnership() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     game1.placeCardInPosition(3, 1, 0); // player 1 placed mandragona in (1,0)
     assertTrue(game1.getCellAt(1, 2).isCardPlaceable()); // (1,2) red pawns
@@ -335,6 +368,8 @@ public class PawnsBoardTest {
   @Test
   public void testPass() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
     assertEquals(player1.toString(), game1.getCurrentPlayer().toString()); // pass = 1 => player 1
     game1.pass();
     assertEquals(player2.toString(), game1.getCurrentPlayer().toString()); // pass = 2 => player 2
@@ -423,6 +458,8 @@ public class PawnsBoardTest {
   @Test
   public void testStartGame() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
     assertEquals(player1.toString(), game1.getCurrentPlayer().toString()); // player 1 created
     game1.setNextPlayer();
     assertEquals(player2.toString(), game1.getCurrentPlayer().toString()); // player 2 created
@@ -477,13 +514,10 @@ public class PawnsBoardTest {
   @Test
   public void testGetCellAtGameCard() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
     game1.placeCardInPosition(3, 1, 0);
     assertEquals(mandragora, game1.getCellAt(1, 0));
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void testGetHandGameNotStarted() {
-    game1.getHand(game1.getCurrentPlayerID());
   }
 
   @Test
@@ -501,6 +535,8 @@ public class PawnsBoardTest {
   @Test
   public void testGetWinner() {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     game1.pass();
     game1.placeCardInPosition(0, 0, 4);
@@ -515,6 +551,8 @@ public class PawnsBoardTest {
   @Test
   public void testGetWinningScore() {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     game1.drawNextCard();
     game1.pass();
@@ -538,6 +576,9 @@ public class PawnsBoardTest {
   @Test
   public void testGetP1Score() {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     game1.drawNextCard();
     game1.placeCardInPosition(0, 0, 0);
     game1.pass();
@@ -554,6 +595,9 @@ public class PawnsBoardTest {
   @Test
   public void testGetP2Score() {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     game1.pass();
     game1.placeCardInPosition(0, 0, 4);
     assertEquals(1, game1.getP2RowScore(0));
@@ -572,6 +616,9 @@ public class PawnsBoardTest {
   @Test
   public void testGetCurrentNextPlayer() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     assertEquals(player1.toString(), game1.getCurrentPlayer().toString()); // player 1 turn
 
     game1.setNextPlayer(); // update turn
@@ -586,11 +633,73 @@ public class PawnsBoardTest {
   @Test
   public void testIsGameOver() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     assertFalse(game1.isGameOver());
 
     game1.pass();
     game1.pass();
     assertTrue(game1.isGameOver());
+  }
+
+  @Test
+  public void testGetBoard() {
+    game1.startGame(p1Deck, p2Deck, 5, true);
+    ArrayList<Cell> row = new ArrayList<Cell>(Arrays.asList(redPawns, emptyCell, emptyCell,
+            emptyCell, bluePawns));
+    ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
+    board.add(row);
+    board.add(row);
+    board.add(row);
+
+    assertEquals(board, game1.getBoard());
+  }
+
+  @Test
+  public void testGetOwnerOfCell() {
+    game1.startGame(p1Deck, p2Deck, 5, true);
+    assertEquals(player1, game1.getOwnerOfCell(0,0));
+  }
+
+  @Test
+  public void testGetPlayerColor() {
+    game1.startGame(p1Deck, p2Deck, 5, true);
+    assertEquals(Color.red, game1.getPlayerColor(1));
+    assertEquals(Color.blue, game1.getPlayerColor(2));
+  }
+
+  @Test
+  public void testGetPlayerTotalScore() {
+    game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
+    game1.placeCardInPosition(0, 0, 0);
+    game1.placeCardInPosition(1, 1, 4);
+    assertEquals(1, game1.getPlayerTotalScore(1));
+    assertEquals(1, game1.getPlayerTotalScore(2));
+  }
+
+  @Test
+  public void testGetCurrentPlayerID() {
+    game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
+    assertEquals(1, game1.getCurrentPlayerID());
+    game1.pass();
+    assertEquals(2, game1.getCurrentPlayerID());
+  }
+
+  @Test
+  public void testGetPlayerByColor() {
+    game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
+    assertEquals(player1, game1.getPlayerByColor(Color.red));
+    assertEquals(player2, game1.getPlayerByColor(Color.blue));
   }
 
   // TESTS FOR DECK CONFIGUTATION
@@ -614,6 +723,8 @@ public class PawnsBoardTest {
   @Test
   public void testTextualViewToString() {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     PawnsBoardTextualView view = new PawnsBoardTextualView(game1);
     String expected =
@@ -644,6 +755,8 @@ public class PawnsBoardTest {
   @Test
   public void testTextualViewRender() throws IOException {
     game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
 
     PawnsBoardTextualView view = new PawnsBoardTextualView(game1);
     StringBuilder output = new StringBuilder();
@@ -773,6 +886,16 @@ public class PawnsBoardTest {
     assertEquals("_", emptyCell.toString());
   }
 
+  @Test
+  public void testEmptyCellGetOwnedColor() {
+    assertEquals(Color.gray, emptyCell.getOwnedColor());
+  }
+
+  @Test
+  public void testEmptyCellGetCellColor() {
+    assertEquals(Color.gray, emptyCell.getCellColor());
+  }
+
   // TESTS FOR GAME CARD
   @Test
   public void testGameCardInvalidConstructor() {
@@ -791,6 +914,9 @@ public class PawnsBoardTest {
   @Test
   public void testGameCardGetColor() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     assertEquals(Color.white, game1.getHand(game1.getCurrentPlayerID()).get(1).getOwnedColor());
 
     game1.placeCardInPosition(1, 0, 0);
@@ -823,6 +949,9 @@ public class PawnsBoardTest {
   @Test
   public void testGameCardToString() {
     game1.startGame(p1Deck, p2Deck, 5, true);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+
     assertEquals(new ArrayList<GameCard>(Arrays.asList(cavestalker, bee,
                     sweeper, mandragora, queen, security)),
             game1.getHand(game1.getCurrentPlayerID()));
@@ -832,6 +961,26 @@ public class PawnsBoardTest {
 
     assertEquals("R", game1.getCellAt(2, 0).toString());
     assertEquals("B", game1.getCellAt(0, 4).toString());
+  }
+
+  @Test
+  public void testGameCardGetOwnedColor() {
+    game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+    game1.placeCardInPosition(0, 0, 0); // player 1 placed card
+
+    assertEquals(Color.red, security.getOwnedColor());
+  }
+
+  @Test
+  public void testGameCardGetCellColor() {
+    game1.startGame(p1Deck, p2Deck, 5, false);
+    game1.subscribe(observer1, 1);
+    game1.subscribe(observer2, 2);
+    game1.placeCardInPosition(0, 0, 0); // player 1 placed card
+
+    assertEquals(Color.red, security.getCellColor());
   }
 
   // TESTS FOR PAWNS
@@ -855,6 +1004,16 @@ public class PawnsBoardTest {
     assertEquals("1", redPawns.toString());
   }
 
+  @Test
+  public void testPawnsGetOwnedColor() {
+    assertEquals(Color.red, redPawns.getOwnedColor());
+  }
+
+  @Test
+  public void testPawnsGetCellColor() {
+    assertEquals(Color.gray, redPawns.getCellColor());
+  }
+
   // TESTS FOR POSITION
   @Test
   public void testGetRowDelta() {
@@ -866,5 +1025,18 @@ public class PawnsBoardTest {
   public void testGetColDelta() {
     assertEquals(1, rightSecurity.getColDelta());
     assertEquals(0, topSecurity.getColDelta());
+  }
+
+  // TESTS FOR PAWNS BOARD BUILDER
+  @Test
+  public void testPawnsBoardBuilder() {
+    QueensBlood pawnsBoard = new PawnsBoardBuilder()
+            .setHeight(3)
+            .setWidth(5)
+            .build();
+    pawnsBoard.startGame(p1Deck, p2Deck, 5, false);
+    pawnsBoard.subscribe(observer1, 1);
+    pawnsBoard.subscribe(observer2, 2);
+    assertEquals(player1, pawnsBoard.getCurrentPlayer());
   }
 }

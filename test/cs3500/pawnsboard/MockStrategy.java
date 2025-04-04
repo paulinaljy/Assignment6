@@ -8,9 +8,17 @@ import cs3500.pawnsboard.model.ReadonlyPawnsBoardModel;
 import cs3500.pawnsboard.strategy.Move;
 import cs3500.pawnsboard.strategy.Strategy;
 
+/**
+ * Represents a mock of a strategy that takes in a list of move sequences used for testing the
+ * machine player.
+ */
 public class MockStrategy implements Strategy {
-  private Iterator<Move> moveSequence;
+  private final Iterator<Move> moveSequence;
 
+  /**
+   * Initializes a MockStrategy with a list of moves for the machine player.
+   * @param moves list of moves
+   */
   public MockStrategy(List<Move> moves) {
     this.moveSequence = moves.iterator();
   }

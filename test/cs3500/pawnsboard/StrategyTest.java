@@ -10,16 +10,21 @@ import java.util.Random;
 
 import cs3500.pawnsboard.controller.DeckConfiguration;
 import cs3500.pawnsboard.controller.PawnsBoardDeckConfig;
+import cs3500.pawnsboard.controller.PawnsBoardPlayerController;
 import cs3500.pawnsboard.model.GameCard;
+import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.PawnsBoardModel;
 import cs3500.pawnsboard.model.Position;
 import cs3500.pawnsboard.model.QueensBlood;
+import cs3500.pawnsboard.player.GamePlayer;
+import cs3500.pawnsboard.player.HumanPlayer;
 import cs3500.pawnsboard.strategy.BlockOpponent;
 import cs3500.pawnsboard.strategy.ControlBoard;
 import cs3500.pawnsboard.strategy.FillFirst;
 import cs3500.pawnsboard.strategy.MaxRowScore;
 import cs3500.pawnsboard.strategy.Move;
 import cs3500.pawnsboard.strategy.Strategy;
+import cs3500.pawnsboard.view.PawnsBoardView;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,6 +51,12 @@ public class StrategyTest {
   private ControlBoard controlBoardStrategy;
   private BlockOpponent blockOpponentStrategy;
   private BlockOpponent blockOpponentStrategy2;
+  private GamePlayer humanPlayer1;
+  private GamePlayer humanPlayer2;
+  private PawnsBoardView view1;
+  private PawnsBoardView view2;
+  private ModelActions observer1;
+  private ModelActions observer2;
 
   @Before
   public void setup() {
@@ -136,12 +147,21 @@ public class StrategyTest {
             new ArrayList<Strategy>(Arrays.asList(fillFirstStrategy, maxRowScoreStrategy));
     blockOpponentStrategy = new BlockOpponent(opponentStrategies3);
     blockOpponentStrategy2 = new BlockOpponent(opponentStrategies2);
+
+    view1 = new MockPawnsBoardView(model, 1);
+    humanPlayer1 = new HumanPlayer(model, 1);
+    observer1 = new PawnsBoardPlayerController(model, humanPlayer1, view1);
+    view2 = new MockPawnsBoardView(model, 2);
+    humanPlayer2 = new HumanPlayer(model, 2);
+    observer2 = new PawnsBoardPlayerController(model, humanPlayer2, view2);
   }
 
   // test for player 1 find first card that is placeable in first available cell (0,0)
   @Test
   public void testFillFirstCardPlayer1() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
 
     assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
             model.getHand(model.getCurrentPlayerID())); // player 1's current hand
@@ -160,6 +180,8 @@ public class StrategyTest {
   @Test
   public void testFillFirstCardPlayer2() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.pass();
     model.drawNextCard();
 
@@ -180,6 +202,8 @@ public class StrategyTest {
   @Test
   public void testFillFirstCellPlayer1() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.placeCardInPosition(1, 0, 0);
     model.pass();
 
@@ -199,6 +223,8 @@ public class StrategyTest {
   @Test
   public void testFillFirstCellPlayer2() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.pass();
     model.placeCardInPosition(1, 0, 4);
     model.pass();
@@ -222,6 +248,8 @@ public class StrategyTest {
     StringBuilder log = new StringBuilder();
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, false);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
 
     assertEquals(new ArrayList<GameCard>(Arrays.asList(security, bee, sweeper, crab, mandragora,
                     queen)), mockModel.getHand(mockModel.getCurrentPlayerID()));
@@ -235,6 +263,8 @@ public class StrategyTest {
     StringBuilder log = new StringBuilder();
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5, 3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
     mockModel.pass();
 
     Move move = fillFirstStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
@@ -247,6 +277,8 @@ public class StrategyTest {
     model.startGame(new ArrayList<GameCard>(Arrays.asList(sweeper, trooper, cavestalker, lobber,
             sweeper, trooper, cavestalker, lobber, sweeper, trooper, cavestalker, lobber)),
             p2Deck, 5, true); // all cards cost = 2
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
 
     assertEquals(new Move(-1, -1, -1, true),
             fillFirstStrategy.chooseMove(model, model.getCurrentPlayer()));
@@ -256,6 +288,8 @@ public class StrategyTest {
   @Test
   public void testMaxRowScorePlayer1() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
 
     assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
             model.getHand(model.getCurrentPlayerID())); // player 1's current hand
@@ -284,6 +318,8 @@ public class StrategyTest {
   public void testMaxRowScorePlayer2() {
     model.startGame(p1Deck, p2Deck, 5, true);
     model.placeCardInPosition(4, 0, 0);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
 
     assertEquals(Arrays.asList(lobber, bee, mandragora, crab, sweeper),
             model.getHand(model.getCurrentPlayerID())); // player 2's current hand
@@ -309,6 +345,8 @@ public class StrategyTest {
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
             3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
     mockModel.pass();
     mockModel.placeCardInPosition(2, 0, 4); // player 2 placed mandragora, value 2
 
@@ -326,6 +364,8 @@ public class StrategyTest {
             3, new Random(6));
     mockModel.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(security, sweeper, trooper,
             cavestalker, lobber)), 5, false);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
     mockModel.pass();
     mockModel.placeCardInPosition(0, 0, 4);
     mockModel.pass();
@@ -343,6 +383,8 @@ public class StrategyTest {
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
             3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, false);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
     mockModel.placeCardInPosition(0, 0, 0);
     assertEquals(2, mockModel.getP1RowScore(0));
     assertEquals(0, mockModel.getP2RowScore(0));
@@ -363,6 +405,8 @@ public class StrategyTest {
   @Test
   public void testMaxRowScoreCellPass() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.pass();
     model.placeCardInPosition(1, 0, 4); // player 2 placed bee in (0,4)
     model.pass();
@@ -396,6 +440,8 @@ public class StrategyTest {
   @Test
   public void testControlBoardPlayer1() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
 
     assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
             model.getHand(model.getCurrentPlayerID())); // player 1's current hand
@@ -418,6 +464,8 @@ public class StrategyTest {
     model.startGame(p1Deck, new ArrayList<GameCard>(Arrays.asList(bee, sweeper, crab, mandragora,
             trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber,
             bee, sweeper, crab, mandragora, trooper, queen, lobber)), 5, false);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.pass();
     model.placeCardInPosition(3, 2, 4); // placed mandragora
     model.pass();
@@ -441,6 +489,8 @@ public class StrategyTest {
     MockPawnsBoardModel mockModel = new MockPawnsBoardModel(log, 5,
             3, new Random(6));
     mockModel.startGame(p1Deck, p2Deck, 5, true);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
 
     Move move = controlBoardStrategy.chooseMove(mockModel, mockModel.getCurrentPlayer());
     assertEquals("(0,0) (0,1) (0,2) (0,3) (0,4) (1,0) (1,1) (1,2) (1,3) (1,4) (2,0) (2,1) "
@@ -456,6 +506,8 @@ public class StrategyTest {
             mandragora, trooper, queen, lobber, bee, sweeper, crab, mandragora, trooper, queen,
             lobber, bee, sweeper, crab, mandragora, trooper, queen, lobber)),
             5, true);
+    mockModel.subscribe(observer1, 1);
+    mockModel.subscribe(observer2, 2);
 
     mockModel.pass();
     mockModel.placeCardInPosition(3, 2, 4); // placed mandragora
@@ -472,6 +524,8 @@ public class StrategyTest {
     model.startGame(new ArrayList<GameCard>(Arrays.asList(bee, sweeper, queen, trooper,
             cavestalker, lobber, bee, sweeper, queen, trooper, cavestalker, bee, sweeper, queen,
             trooper, cavestalker)), p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     // cards have no net influence / cost > 1 cannot be placed
 
     assertEquals(new Move(-1, -1, -1, true),
@@ -482,6 +536,8 @@ public class StrategyTest {
   public void testBlockOpponentPlayer1() {
     model.startGame(p1Deck, p2Deck, 5, false);
     model.placeCardInPosition(0, 1, 0); // p1 placed security
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.drawNextCard();
     model.placeCardInPosition(0, 1, 4); // p2 placed security
     model.drawNextCard();
@@ -516,6 +572,8 @@ public class StrategyTest {
   public void testBlockOpponentPlayer2() {
     model.startGame(p1Deck, p2Deck, 5, false);
     model.placeCardInPosition(0, 1, 0); // p1 placed security
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.drawNextCard();
     model.placeCardInPosition(3, 2, 4); // p2 placed crab
     model.drawNextCard();
@@ -553,6 +611,8 @@ public class StrategyTest {
   @Test
   public void testBlockOpponentPass() {
     model.startGame(p1Deck, p2Deck, 5, true);
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     assertEquals(Arrays.asList(cavestalker, bee, sweeper, mandragora, queen, security),
             model.getHand(model.getCurrentPlayerID())); // player 1's current hand
     model.pass();
@@ -582,6 +642,8 @@ public class StrategyTest {
   public void testBlockOpponentDifferentStrategies() {
     model.startGame(p1Deck, p2Deck, 5, false);
     model.placeCardInPosition(0, 1, 0); // p1 placed security
+    model.subscribe(observer1, 1);
+    model.subscribe(observer2, 2);
     model.drawNextCard();
     model.placeCardInPosition(0, 1, 4); // p2 placed security
     model.drawNextCard();

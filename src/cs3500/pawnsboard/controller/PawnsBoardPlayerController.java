@@ -8,7 +8,6 @@ import javax.swing.*;
 import cs3500.pawnsboard.player.GamePlayer;
 import cs3500.pawnsboard.model.ModelActions;
 import cs3500.pawnsboard.model.QueensBlood;
-import cs3500.pawnsboard.view.GameOverFrame;
 import cs3500.pawnsboard.view.PawnsBoardView;
 import cs3500.pawnsboard.view.ViewActions;
 
@@ -60,6 +59,10 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
     this.view.makeVisible();
   }
 
+  /**
+   * Appends the given message to the transcript.
+   * @param message string message
+   */
   private void addTranscript(String message) {
     try {
       transcript.append(message + "\n");
@@ -67,7 +70,6 @@ public class PawnsBoardPlayerController implements PawnsBoardController, ViewAct
       // ignore exception
     }
   }
-
   @Override
   public void placeCard() {
     String currentPlayer = this.player.toString();

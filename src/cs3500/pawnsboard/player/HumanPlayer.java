@@ -11,6 +11,9 @@ public class HumanPlayer implements GamePlayer {
   private int playerID;
 
   public HumanPlayer(ReadonlyPawnsBoardModel model, int playerID) {
+    if (model == null) {
+      throw new IllegalArgumentException("Model cannot be null");
+    }
     this.model = model;
     this.playerID = playerID;
   }
