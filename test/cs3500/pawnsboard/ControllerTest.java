@@ -557,25 +557,20 @@ public class ControllerTest {
                     "0 1___1 0\n";
     assertEquals(expected, view1.toString());
 
-    // Valid move by player 1
     controller1.setCardIdx(0);
     controller1.setSelectedCell(0,0);
     controller1.placeCard();
 
-    // Valid move by player 2
     controller2.setCardIdx(0);
     controller2.setSelectedCell(0,4);
     controller2.placeCard();
 
-    // Invalid move (player 1 selects out of bounds)
     controller1.setCardIdx(0);
     controller1.setSelectedCell(-1,0);
     controller1.placeCard();
 
-    // Valid pass by player 1
     controller1.pass();
 
-    // Player 2 passes to end game
     controller2.pass();
 
     String newExpected = view1.toString();
